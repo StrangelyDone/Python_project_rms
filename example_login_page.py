@@ -1,15 +1,43 @@
+from csv import * 
 from tkinter import *
 
+
 def clicked():
-    print(u.get(), p.get())
+    u_name = str(u.get())
+    p_word = str(p.get())
+
+    boolean, type_of_login = verify(u_name, p_word)
+    if boolean:
+        print("Login successful!")
+    else:
+        #message box
+        print("wrong username / password")
+
     u.set('')
     p.set('')
+
+    return type_of_login
 
 def show_password():
     if password.cget("show") == "*":
         password.config(show = '')
     else:
         password.config(show = "*")
+
+def verify(name, pword):
+    try:
+        fp = open("login_credentials.csv")
+        data = reader(fp)
+    except Exception as e:
+        #open a message box showing an error.
+        print(e)
+
+    for i in data:
+        if str(i[0]) == name and str(i[1]) == pword:
+            return True, i[2]
+    
+    fp.close()
+    return False, None
 
 
 root = Tk()

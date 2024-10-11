@@ -1,5 +1,6 @@
 from csv import * 
 from tkinter import *
+from tkinter import messagebox
 
 
 def clicked():
@@ -11,6 +12,7 @@ def clicked():
         print("Login successful!")
     else:
         #message box
+        messagebox.showerror("Error occured", "Invalid username / password!")
         print("wrong username / password")
 
     u.set('')
@@ -29,7 +31,7 @@ def verify(name, pword):
         fp = open("login_credentials.csv")
         data = reader(fp)
     except Exception as e:
-        #open a message box showing an error.
+        messagebox.showerror("Error occured", "Some Error occured while trying to login!")
         print(e)
 
     for i in data:

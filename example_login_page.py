@@ -1,6 +1,5 @@
 from tkinter import *
 
-
 def clicked():
     print(u.get(), p.get())
     u.set('')

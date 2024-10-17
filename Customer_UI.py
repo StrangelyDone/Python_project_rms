@@ -11,6 +11,8 @@ class mine:
         self.root.title("Customer/Admin")
         self.root.attributes('-fullscreen', True)
         self.root.configure(bg='black')
+
+        #figure some way to know the row span of a device so it works nicely! 
         self.row_length = 4
 
         self.image_path=PhotoImage(file='images/open page 1 Large.png')
@@ -125,7 +127,7 @@ class mine:
         self.back.grid(row=(len(starters) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
         # Proceed button
-        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18))
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer)
         self.proceed.grid(row=(len(starters) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
 
         self.root.mainloop()
@@ -182,7 +184,7 @@ class mine:
         self.back.grid(row=(len(meals) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
         # Proceed button
-        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18))
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer)
         self.proceed.grid(row=(len(meals) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
 
         self.root.mainloop()
@@ -239,7 +241,7 @@ class mine:
         self.back.grid(row=(len(desserts) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
         # Proceed button
-        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18))
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer)
         self.proceed.grid(row=(len(desserts) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
 
         self.root.mainloop()

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import PhotoImage
 from tkinter.scrolledtext import ScrolledText
+from tkinter import ttk
 import Menu_Management
 import order_management
 
@@ -16,7 +17,7 @@ class mine:
         self.root.configure(bg='black')
 
         #figure some way to know the row span of a device so it works nicely! 
-        self.row_length = 4
+        self.row_length = 2
 
         self.image_path=PhotoImage(file='images/open page 1 Large.png')
         self.bg_image=tk.Label(self.root, image=self.image_path)
@@ -286,7 +287,7 @@ class mine:
         self.button_dine_in.image = self.image_2
 
         self.image_3 = PhotoImage(file='images/takeaway Small.png')
-        self.button_takeaway = tk.Button(self.second_frame, text="Desserts", font=('Arial', 18), image=self.image_3, command=self.close_window)
+        self.button_takeaway = tk.Button(self.second_frame, text="Desserts", font=('Arial', 18), image=self.image_3, command=self.payment)
         self.button_takeaway.grid(row=1, column=1, padx = 30)
         self.button_takeaway.image = self.image_3
 
@@ -311,7 +312,7 @@ class mine:
         self.textbox = tk.Text(self.root, height=5, font=('Arial', 16))
         self.textbox.pack(padx=10, pady=10)
 
-        self.button = tk.Button(self.root , text="Proceed to payment", font=('Arial', 16), command=exit)
+        self.button = tk.Button(self.root , text="Proceed to payment", font=('Arial', 16), command=self.payment)
         self.button.pack(padx=10, pady=10)
 
         self.root.mainloop()
@@ -336,26 +337,92 @@ class mine:
         self.buttonframe.columnconfigure(0, weight=1)
         self.buttonframe.columnconfigure(1, weight=1)
 
-        self.btn1=tk.Button(self.buttonframe, text="2", font=('Arial', 18), command=exit)
+        '''self.btn1=tk.Button(self.buttonframe, text="2", font=('Arial', 18), command=self.payment)
         self.btn1.grid(row=0, column=0, sticky=tk.W+tk.E)
 
-        self.btn2=tk.Button(self.buttonframe, text="3-4", font=('Arial', 18), command=exit)
+        self.btn2=tk.Button(self.buttonframe, text="3-4", font=('Arial', 18), command=self.payment)
         self.btn2.grid(row=0, column=1, sticky=tk.W+tk.E)
 
-        self.btn3=tk.Button(self.buttonframe, text="6-5", font=('Arial', 18), command=exit)
+        self.btn3=tk.Button(self.buttonframe, text="6-5", font=('Arial', 18), command=self.payment)
         self.btn3.grid(row=1, column=0, sticky=tk.W+tk.E)
 
-        self.btn4=tk.Button(self.buttonframe, text="8-10", font=('Arial', 18), command=exit)
+        self.btn4=tk.Button(self.buttonframe, text="8-10", font=('Arial', 18), command=self.payment)
         self.btn4.grid(row=1, column=1, sticky=tk.W+tk.E)
 
+        self.buttonframe.pack()'''
+        options=["1","2","3","4","5","6","7"]
+        combo_box=ttk.Combobox(self.root,values=options)
+        combo_box.pack(pady=10)
+        combo_box.current(0)
+        self.btn=tk.Button(self.buttonframe,text="Proceed",command=self.payment)
+        self.btn.grid(row=1,column=1,sticky=tk.W+tk.E)
         self.buttonframe.pack()
 
+
         self.root.mainloop()
+
+    def adding_orders(obj):
+        menu_stuff = Menu_Management.Menu_class()
+        starters, meals, desserts = menu_stuff.display()
+
+        cart = order_management.Cart_class()
+
+        try:
+            starters_selected = obj.starter_selection
+            for i in starters_selected:
+                if (starters_selected[i].get()):
+                    cart.add(i, starters[i])
+        except AttributeError:
+            #hopefully this doesn't trigger..
+            pass
+
+        try:
+            meals_selected = obj.meal_selection
+            for i in meals_selected:
+                if (meals_selected[i].get()):
+                    cart.add(i, meals[i])
+        except AttributeError:
+            #hopefully this doesn't trigger too..
+            pass
+
+        try:
+            desserts_selected = obj.dessert_selection
+            for i in desserts_selected:
+                if (desserts_selected[i].get()):
+                    cart.add(i, desserts[i])
+        except AttributeError:
+            #even this :/ 
+            pass
+
+        return cart.checkout()
+    
+    def payment(self):
+        self.close_window()
+        self.root = tk.Tk()
+        self.root.attributes('-fullscreen', True)
+        self.root.configure(bg='black')
+        self.root.title("Payment")
+        self.cost = int(self.adding_orders())
+
+        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22), bg='white',command=self.sucpay)
+        self.button.pack(pady=70)
+
+        self.root.mainloop()
+
+    def sucpay(self):
+        self.close_window()
+        messagebox.showinfo("Payment Portal","Payment Successful")
+
+    """def admin(self):
+        self.close_window()
+        self.root = tk.Tk()
+        self.root.attributes('-fullscreen', True)
+        self.root.title("Admin")
 
     #def cost(self):
         #self.cost=print("Your meal comes to a total of")
 
-    """def payment(self):
+    def payment(self):
         self.close_window
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
@@ -372,46 +439,5 @@ class mine:
         self.root.destroy()
 
 
-
-
-
-def adding_orders(obj):
-    menu_stuff = Menu_Management.Menu_class()
-    starters, meals, desserts = menu_stuff.display()
-
-    cart = order_management.Cart_class()
-
-    try:
-        starters_selected = obj.starter_selection
-        for i in starters_selected:
-            if (starters_selected[i].get()):
-                cart.add(i, starters[i])
-    except AttributeError:
-        #hopefully this doesn't trigger..
-        pass
-
-    try:
-        meals_selected = obj.meal_selection
-        for i in meals_selected:
-            if (meals_selected[i].get()):
-                cart.add(i, meals[i])
-    except AttributeError:
-        #hopefully this doesn't trigger too..
-        pass
-
-    try:
-        desserts_selected = obj.dessert_selection
-        for i in desserts_selected:
-            if (desserts_selected[i].get()):
-                cart.add(i, desserts[i])
-    except AttributeError:
-        #even this :/ 
-        pass
-
-    return cart.checkout()
-
-
 if __name__ == "__main__":
     obj = mine()
-    price = adding_orders(obj)
-    print(price)

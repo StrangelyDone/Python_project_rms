@@ -11,6 +11,7 @@ class mine:
         self.root.title("Customer/Admin")
         self.root.attributes('-fullscreen', True)
         self.root.configure(bg='black')
+        self.row_length = 4
 
         self.image_path=PhotoImage(file='images/open page 1 Large.png')
         self.bg_image=tk.Label(self.root, image=self.image_path)
@@ -50,20 +51,6 @@ class mine:
 
         self.my_canvas.create_window((0,0), window=self.second_frame, anchor="nw")
 
-        #starters-5    meals-6   desserts-5
-        """
-        Starters:
-        Veg Manchuria,70       Chicken Manchuria,100
-        Fruit Salad,50          Vegetable Salad,30             Fruit Custard,50
-
-        Meals:
-        Chicken Dum Biryani,300      Pudhina Rice,170           Prawns Biryani,400
-        Veg Thali,700                Curd Rice,100              Plain Rice,80
-
-        Desserts:
-        Hazel Nutella Brownie,96    Chocolate Ball,30      Choco Walnut Brownie,60
-        Choco Chip Brownie,60        Choco Chip Cake,540"""
-
         self.image_1=PhotoImage(file='images/starters Small.png')
         
         self.button_starters = tk.Button(self.second_frame , text="Starters", font=('Arial', 18), image=self.image_1, command=self.starters)
@@ -93,63 +80,53 @@ class mine:
         self.root.title("Starters")
         self.root.configure(bg='black')
 
-        self.check_state_6 = tk.IntVar()
-        menu=Menu_Management.Menu_class()
-        
-        
+        self.check_state = tk.IntVar()
+        menu = Menu_Management.Menu_class()
         starters = menu.get_starter_items()
-        variables = []
+        variables = {}
 
+        # Main frame to hold the canvas
+        self.main_frame = tk.Frame(self.root, bg='black')
+        self.main_frame.pack(fill='both', expand=1)
 
+        # Canvas for scrolling
+        self.my_canvas = tk.Canvas(self.main_frame, bg='black')
+        self.my_canvas.pack(side='left', fill='both', expand=1)
+
+        # Scrollbar
+        self.my_scrollbar = tk.Scrollbar(self.main_frame, orient='vertical', command=self.my_canvas.yview)
+        self.my_scrollbar.pack(side='right', fill='y')
+
+        # Configure canvas to work with the scrollbar
+        self.my_canvas.configure(yscrollcommand=self.my_scrollbar.set)
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
+
+        # Second frame inside the canvas to hold the checkbuttons
+        self.second_frame = tk.Frame(self.my_canvas, bg='black')
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Add checkbuttons inside the second frame in a grid layout with 3 images per row
         for i in range(len(starters)):
-            var = tk.IntVar
-            variables.append(var)
-            image1=PhotoImage(file=f'images/{starters[i]}.png')
+            var = tk.IntVar()
+            variables[f"{starters[i]}"] = var
+            image1 = PhotoImage(file=f'images/{starters[i]}.png')
 
-            self.check = tk.Checkbutton(self.root, text=f"{starters[i]}", font=('Arial', 16), bg='black', image=image1, variable=var)
-            self.check.grid(row=(i%3), column=(i//3))#removed padding cuz why not
+            # Position checkbuttons in a 3-column grid
+            self.check = tk.Checkbutton(self.second_frame, text=f"{starters[i]}", font=('Arial', 16), bg='black', image=image1, variable=var, compound='top')
+            self.check.grid(row=i // self.row_length, column=i % self.row_length, padx=10, pady=15)
             self.check.image = image1
 
+        # Confirm selected dishes checkbutton (placed below the grid)
+        self.check = tk.Checkbutton(self.second_frame, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state)
+        self.check.grid(row=(len(starters) // 3) + 1, column=0, pady=20, columnspan=3)
 
-        '''self.image_1=PhotoImage(file='Veg Manchuria Small.png')
+        # Back button
+        self.back = tk.Button(self.second_frame, text="Go back", font=('Arial', 18), command=self.menu)
+        self.back.grid(row=(len(starters) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
-        self.check_1 = tk.Checkbutton(self.root, text="Veg Manchuria 70", font=('Arial', 16), bg='black', image=self.image_1, variable=self.check_state_1)
-        self.check_1.grid(row=0, column=0, padx=45, pady=40)
-        self.check_1.image=self.image_1
-
-        self.image_2=PhotoImage(file='Chicken Manchuria Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Chicken Manchuria 100", font=('Arial', 16), bg='black', image=self.image_2, variable=self.check_state_2)
-        self.check.grid(row=0, column=1, padx=30, pady=40)
-        self.check.image=self.image_2
-
-        self.image=PhotoImage(file='Fruit Salad Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Fruit Salad 50", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_3)
-        self.check.grid(row=0, column=2, padx=45, pady=40)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Vegetable Salad Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Vegetable Salad 30", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_4)
-        self.check.grid(row=1, column=0, padx=90)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Fruit custard Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Fruit Custard 50", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_5)
-        self.check.grid(row=1, column=1, padx=90)
-        self.check.image=self.image'''
-
-        self.check = tk.Checkbutton(self.root, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state_6)
-        self.check.grid( pady=20)
-
-        self.back = tk.Button(self.root , text="Go back", font=('Arial', 18), command=self.menu)
-        self.back.grid(padx=100, pady=10)
-
-        self.proceed = tk.Button(self.root , text="Proceed", font=('Arial', 18), command=self.customer)
-        self.proceed.grid( padx=100, pady=10)
-
+        # Proceed button
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18))
+        self.proceed.grid(row=(len(starters) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
 
         self.root.mainloop()
 
@@ -157,71 +134,56 @@ class mine:
         self.close_window()
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
-        self.root.title("Starters")
+        self.root.title("Meals")
         self.root.configure(bg='black')
 
-        self.check_state_7=tk.IntVar()
-        menu=Menu_Management.Menu_class()
-        
-        
-        meals= menu.get_meal_items()
-        variables = []
+        self.check_state = tk.IntVar()
+        menu = Menu_Management.Menu_class()
+        meals = menu.get_meal_items()
+        variables = {}
 
+        # Main frame to hold the canvas
+        self.main_frame = tk.Frame(self.root, bg='black')
+        self.main_frame.pack(fill='both', expand=1)
 
+        # Canvas for scrolling
+        self.my_canvas = tk.Canvas(self.main_frame, bg='black')
+        self.my_canvas.pack(side='left', fill='both', expand=1)
+
+        # Scrollbar
+        self.my_scrollbar = tk.Scrollbar(self.main_frame, orient='vertical', command=self.my_canvas.yview)
+        self.my_scrollbar.pack(side='right', fill='y')
+
+        # Configure canvas to work with the scrollbar
+        self.my_canvas.configure(yscrollcommand=self.my_scrollbar.set)
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
+
+        # Second frame inside the canvas to hold the checkbuttons
+        self.second_frame = tk.Frame(self.my_canvas, bg='black')
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Add checkbuttons inside the second frame in a grid layout with 3 images per row
         for i in range(len(meals)):
-            var = tk.IntVar
-            variables.append(var)
-            image1=PhotoImage(file=f'images/{meals[i]}.png')
+            var = tk.IntVar()
+            variables[f"{meals[i]}"] = var
+            image1 = PhotoImage(file=f'images/{meals[i]}.png')
 
-            self.check = tk.Checkbutton(self.root, text=f"{meals[i]}", font=('Arial', 16), bg='black', image=image1, variable=var)
-            self.check.grid(row=(i%3), column=(i//3))#removed padding cuz why not
+            # Position checkbuttons in a 3-column grid
+            self.check = tk.Checkbutton(self.second_frame, text=f"{meals[i]}", font=('Arial', 16), bg='black', image=image1, variable=var, compound='top')
+            self.check.grid(row=i // self.row_length, column=i % self.row_length, padx=10, pady=15)
             self.check.image = image1
 
+        # Confirm selected dishes checkbutton (placed below the grid)
+        self.check = tk.Checkbutton(self.second_frame, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state)
+        self.check.grid(row=(len(meals) // 3) + 1, column=0, pady=20, columnspan=3)
 
-        '''self.image_1=PhotoImage(file='Chicken Dum Biriyani Small.png')
+        # Back button
+        self.back = tk.Button(self.second_frame, text="Go back", font=('Arial', 18), command=self.menu)
+        self.back.grid(row=(len(meals) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
-        self.check_1 = tk.Checkbutton(self.root, text="Chicken Dum Biriyani 300", font=('Arial', 16), bg='black', image=self.image_1, variable=self.check_state_1)
-        self.check_1.grid(row=0, column=0, padx=45, pady=30)
-        self.check_1.image=self.image_1
-
-        self.image_2=PhotoImage(file='Pudina rice Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Pudhina Rice 170", font=('Arial', 16), bg='black', image=self.image_2, variable=self.check_state_2)
-        self.check.grid(row=0, column=1, padx=30, pady=30)
-        self.check.image=self.image_2
-
-        self.image=PhotoImage(file='Prawns biriyani Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Prawns Biryani,400", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_3)
-        self.check.grid(row=0, column=2, padx=45, pady=30)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Veg Thali Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Veg Thali,700", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_4)
-        self.check.grid(row=1, column=0, padx=45, pady=20)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Curd rice Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Curd Rice,100", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_5)
-        self.check.grid(row=1, column=1, padx=30, pady=20)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Plain rice Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Plain Rice,80", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_6)
-        self.check.grid(row=1, column=2, padx=45, pady=20)
-        self.check.image=self.image'''
-
-        self.check = tk.Checkbutton(self.root, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state_7)
-        self.check.grid( pady=20)
-
-        self.back = tk.Button(self.root , text="Go back", font=('Arial', 18), command=self.menu)
-        self.back.grid(padx=100, pady=10)
-
-        self.proceed = tk.Button(self.root , text="Proceed", font=('Arial', 18), command=self.customer)
-        self.proceed.grid( padx=100, pady=10)
+        # Proceed button
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18))
+        self.proceed.grid(row=(len(meals) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
 
         self.root.mainloop()
 
@@ -229,66 +191,56 @@ class mine:
         self.close_window()
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
-        self.root.title("Starters")
+        self.root.title("Desserts")
         self.root.configure(bg='black')
-        
-        self.check_state_6 = tk.IntVar()
-        menu=Menu_Management.Menu_class()
 
+        self.check_state = tk.IntVar()
+        menu = Menu_Management.Menu_class()
+        desserts = menu.get_dessert_items()
+        variables = {}
 
-        desserts = menu.get_starter_items()
-        variables = []
+        # Main frame to hold the canvas
+        self.main_frame = tk.Frame(self.root, bg='black')
+        self.main_frame.pack(fill='both', expand=1)
 
+        # Canvas for scrolling
+        self.my_canvas = tk.Canvas(self.main_frame, bg='black')
+        self.my_canvas.pack(side='left', fill='both', expand=1)
 
+        # Scrollbar
+        self.my_scrollbar = tk.Scrollbar(self.main_frame, orient='vertical', command=self.my_canvas.yview)
+        self.my_scrollbar.pack(side='right', fill='y')
+
+        # Configure canvas to work with the scrollbar
+        self.my_canvas.configure(yscrollcommand=self.my_scrollbar.set)
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
+
+        # Second frame inside the canvas to hold the checkbuttons
+        self.second_frame = tk.Frame(self.my_canvas, bg='black')
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Add checkbuttons inside the second frame in a grid layout with 3 images per row
         for i in range(len(desserts)):
-            var = tk.IntVar
-            variables.append(var)
-            image1=PhotoImage(file=f'images/{desserts[i]}.png')
+            var = tk.IntVar()
+            variables[f"{desserts[i]}"] = var
+            image1 = PhotoImage(file=f'images/{desserts[i]}.png')
 
-            self.check = tk.Checkbutton(self.root, text=f"{desserts[i]}", font=('Arial', 16), bg='black', image=image1, variable=var)
-            self.check.grid(row=(i%3), column=(i//3))#removed padding cuz why not
+            # Position checkbuttons in a 3-column grid
+            self.check = tk.Checkbutton(self.second_frame, text=f"{desserts[i]}", font=('Arial', 16), bg='black', image=image1, variable=var, compound='top')
+            self.check.grid(row=i // self.row_length, column=i % self.row_length, padx=10, pady=15)
             self.check.image = image1
 
+        # Confirm selected dishes checkbutton (placed below the grid)
+        self.check = tk.Checkbutton(self.second_frame, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state)
+        self.check.grid(row=(len(desserts) // 3) + 1, column=0, pady=20, columnspan=3)
 
-        '''self.image_1=PhotoImage(file='Hazel Nutella Brownie Small.png')
+        # Back button
+        self.back = tk.Button(self.second_frame, text="Go back", font=('Arial', 18), command=self.menu)
+        self.back.grid(row=(len(desserts) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
-        self.check_1 = tk.Checkbutton(self.root, text="Hazel Nutella Brownie,96", font=('Arial', 16), bg='black', image=self.image_1, variable=self.check_state_1)
-        self.check_1.grid(row=0, column=0, padx=45, pady=30)
-        self.check_1.image=self.image_1
-
-        self.image_2=PhotoImage(file='Chocolate Ball Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Chocolate Ball,30", font=('Arial', 16), bg='black', image=self.image_2, variable=self.check_state_2)
-        self.check.grid(row=0, column=1, padx=30, pady=30)
-        self.check.image=self.image_2
-
-        self.image=PhotoImage(file='Choco Walnut Brownie Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Choco Walnut Brownie,60", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_3)
-        self.check.grid(row=0, column=2, padx=45, pady=30)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Choco Chip Brownie Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Choco Chip Brownie,60", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_4)
-        self.check.grid(row=1, column=0, padx=90, pady=20)
-        self.check.image=self.image
-
-        self.image=PhotoImage(file='Choco Chip Cake Small.png')
-
-        self.check = tk.Checkbutton(self.root, text="Choco Chip Cake,540", font=('Arial', 16), bg='black', image=self.image, variable=self.check_state_5)
-        self.check.grid(row=1, column=1, padx=90, pady=20)
-        self.check.image=self.image'''
-
-        self.check = tk.Checkbutton(self.root, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state_6)
-        self.check.grid( pady=20)
-
-        self.back = tk.Button(self.root , text="Go back", font=('Arial', 18), command=self.menu)
-        self.back.grid(padx=100, pady=10)
-
-        self.proceed = tk.Button(self.root , text="Proceed", font=('Arial', 18), command=self.customer)
-        self.proceed.grid( padx=100, pady=10)
-
+        # Proceed button
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18))
+        self.proceed.grid(row=(len(desserts) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
 
         self.root.mainloop()
 

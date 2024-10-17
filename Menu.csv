@@ -1,17 +1,17 @@
 item,price,category
-Veg Manchuria,70,Starters
-Chicken Manchuria,100,Starters
-Fruit Salad,50,Starters
-Vegetable Salad,30,Starters
-Fruit Custard,50,Starters
-Chicken Dum Biryani,300,Meals
-Pudhina Rice,170,Meals
-Prawns Biryani,400,Meals
-Veg Thali,700,Meals
-Curd Rice,100,Meals
-Plain Rice,80,Meals
-Hazel Nutella Brownie,96,Desserts
-Chocolate Ball,30,Desserts
-Choco Walnut Brownie,60,Desserts
-Choco Chip Brownie,60,Desserts
-Choco Chip Cake,540,Desserts
+veg manchuria,70,Starters
+chicken manchuria,100,Starters
+fruit salad,50,Starters
+vegetable salad,30,Starters
+fruit custard,50,Starters
+chicken dum biryani,300,Meals
+pudhina rice,170,Meals
+prawns biryani,400,Meals
+veg thali,700,Meals
+curd rice,100,Meals
+plain rice,80,Meals
+hazel nutella Brownie,96,Desserts
+chocolate ball,30,Desserts
+choco walnut brownie,60,Desserts
+choco chip brownie,60,Desserts
+choco chip cake,540,Desserts

@@ -3,6 +3,9 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 from tkinter.scrolledtext import ScrolledText
 import Menu_Management
+import order_management
+
+
 class mine:
 
     def __init__(self):
@@ -19,17 +22,17 @@ class mine:
         self.bg_image=tk.Label(self.root, image=self.image_path)
         self.bg_image.pack()
 
-        self.button = tk.Button(self.root , text="Customer", font=('Courier New Bold', 18), height=2, fg='black', command=self.menu)
+        self.button = tk.Button(self.root , text="Menu", font=('Courier New Bold', 18), height=2, fg='black', command=self.menu)
         self.button.pack(padx=20, pady=20)
 
-        self.button = tk.Button(self.root , text="Admin", font=('Times New Roman Bold', 18), height=2, fg='black', command=exit)
+        self.button = tk.Button(self.root , text="Order History", font=('Times New Roman Bold', 18), height=2, fg='black', command=exit)
         self.button.pack(padx=20, pady=20)
 
         self.root.mainloop()
 
     def menu(self):
         self.close_window()
-        self.root=tk.Tk()
+        self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
         self.root.title("Menu")
         self.root.configure(bg='black')
@@ -37,41 +40,37 @@ class mine:
         self.label = tk.Label(self.root, text="Please explore our delightful selection of starters, meals, and desserts.", font=('Courier New Bold', 22), bg='black', fg='white')
         self.label.pack(padx=20, pady=20)
 
-        self.main_frame = tk.Frame(self.root)
+        self.main_frame = tk.Frame(self.root, bg='black')
         self.main_frame.pack(fill='both', expand=1)
 
-        self.my_canvas=tk.Canvas(self.main_frame)
+        # Create a canvas but without the scrollbar
+        self.my_canvas = tk.Canvas(self.main_frame, bg='black')
         self.my_canvas.pack(side='left', fill='both', expand=1)
 
-        self.my_scrollbar=tk.Scrollbar(self.main_frame, orient='vertical', command=self.my_canvas.yview)
-        self.my_scrollbar.pack(side='right', fill='y')
-
-        self.my_canvas.configure(yscrollcommand=self.my_scrollbar.set)
+        # Bind the canvas resize event but without scrollbar adjustments
         self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
 
-        self.second_frame = tk.Frame(self.my_canvas)
+        # Create the second frame inside the canvas
+        self.second_frame = tk.Frame(self.my_canvas, bg='black')
 
-        self.my_canvas.create_window((0,0), window=self.second_frame, anchor="nw")
+        # Add the second frame to the canvas
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
 
-        self.image_1=PhotoImage(file='images/starters Small.png')
-        
-        self.button_starters = tk.Button(self.second_frame , text="Starters", font=('Arial', 18), image=self.image_1, command=self.starters)
-        self.button_starters.grid(row=0, column=0, padx=100)
-        self.button_starters.image=self.image_1
+        # Images and buttons
+        self.image_1 = PhotoImage(file='images/starters Small.png')
+        self.button_starters = tk.Button(self.second_frame, text="Starters", font=('Arial', 18), image=self.image_1, command=self.starters)
+        self.button_starters.grid(row=0, column=0, padx=150, pady=10)
+        self.button_starters.image = self.image_1
 
-        self.image_2=PhotoImage(file='images/meals Small.png')
+        self.image_2 = PhotoImage(file='images/meals Small.png')
+        self.button_meals = tk.Button(self.second_frame, text="Meals", font=('Arial', 18), image=self.image_2, command=self.meals)
+        self.button_meals.grid(row=0, column=2, padx=100, pady=10)
+        self.button_meals.image = self.image_2
 
-        self.button_meals = tk.Button(self.second_frame , text="Meals", font=('Arial', 18),image=self.image_2, command=self.meals)
-        self.button_meals.grid(row=0, column=2, padx=100)
-        self.button_meals.image=self.image_2
-
-        self.image_3=PhotoImage(file='images/desserts Small.png')
-
-        self.button_desserts = tk.Button(self.second_frame , text="Desserts", font=('Arial', 18),image=self.image_3, command=self.desserts)
-        self.button_desserts.grid(row=1, column=1)
-        self.button_desserts.image=self.image_3
-
-        #self.buttonframe.pack(fill='x')
+        self.image_3 = PhotoImage(file='images/desserts Small.png')
+        self.button_desserts = tk.Button(self.second_frame, text="Desserts", font=('Arial', 18), image=self.image_3, command=self.desserts)
+        self.button_desserts.grid(row=1, column=1, pady = 30)
+        self.button_desserts.image = self.image_3
 
         self.root.mainloop()
 
@@ -85,7 +84,7 @@ class mine:
         self.check_state = tk.IntVar()
         menu = Menu_Management.Menu_class()
         starters = menu.get_starter_items()
-        variables = {}
+        self.starter_selection = {}
 
         # Main frame to hold the canvas
         self.main_frame = tk.Frame(self.root, bg='black')
@@ -109,8 +108,8 @@ class mine:
 
         # Add checkbuttons inside the second frame in a grid layout with 3 images per row
         for i in range(len(starters)):
-            var = tk.IntVar()
-            variables[f"{starters[i]}"] = var
+            var = tk.BooleanVar()
+            self.starter_selection[f"{starters[i]}"] = var
             image1 = PhotoImage(file=f'images/{starters[i]}.png')
 
             # Position checkbuttons in a 3-column grid
@@ -142,7 +141,7 @@ class mine:
         self.check_state = tk.IntVar()
         menu = Menu_Management.Menu_class()
         meals = menu.get_meal_items()
-        variables = {}
+        self.meal_selection = {}
 
         # Main frame to hold the canvas
         self.main_frame = tk.Frame(self.root, bg='black')
@@ -167,7 +166,7 @@ class mine:
         # Add checkbuttons inside the second frame in a grid layout with 3 images per row
         for i in range(len(meals)):
             var = tk.IntVar()
-            variables[f"{meals[i]}"] = var
+            self.meal_selection[f"{meals[i]}"] = var
             image1 = PhotoImage(file=f'images/{meals[i]}.png')
 
             # Position checkbuttons in a 3-column grid
@@ -199,7 +198,7 @@ class mine:
         self.check_state = tk.IntVar()
         menu = Menu_Management.Menu_class()
         desserts = menu.get_dessert_items()
-        variables = {}
+        self.dessert_selection = {}
 
         # Main frame to hold the canvas
         self.main_frame = tk.Frame(self.root, bg='black')
@@ -224,7 +223,7 @@ class mine:
         # Add checkbuttons inside the second frame in a grid layout with 3 images per row
         for i in range(len(desserts)):
             var = tk.IntVar()
-            variables[f"{desserts[i]}"] = var
+            self.dessert_selection[f"{desserts[i]}"] = var
             image1 = PhotoImage(file=f'images/{desserts[i]}.png')
 
             # Position checkbuttons in a 3-column grid
@@ -254,23 +253,42 @@ class mine:
         self.root.title("Customer")
         self.root.configure(bg='white')
 
-        self.image_1=PhotoImage(file='images/takeaway Small.png')
-        
-        self.button_takeaway = tk.Button(self.root , text="Take away", font=('Arial', 18), image=self.image_1, command=exit)
-        self.button_takeaway.pack()
-        self.button_takeaway.image=self.image_1
+        top_frame = tk.Frame(self.root, bg = "black")
+        top_frame.pack(side = 'top',fill='x')
 
-        self.image_2=PhotoImage(file='images/dine-in Small.png')
+        self.label = tk.Label(top_frame, text="Select an option", font=('Courier New Bold', 22), bg='black', fg='white')
+        self.label.pack(padx=20, pady=20)
 
-        self.button_dine = tk.Button(self.root , text="Dine in", font=('Arial', 18),image=self.image_2, command=self.booking_tables)
-        self.button_dine.pack()
-        self.button_dine.image=self.image_2
+        self.main_frame = tk.Frame(self.root)
+        self.main_frame.pack(fill='both', expand=1)
 
-        self.image_3=PhotoImage(file='images/delivery Small.png')
+        # Create a canvas but without the scrollbar
+        self.my_canvas = tk.Canvas(self.main_frame)
+        self.my_canvas.pack(side='left', fill='both', expand=1)
 
-        self.button_delivery = tk.Button(self.root , text="Delivery", font=('Arial', 18),image=self.image_3, command=self.address)
-        self.button_delivery.pack()
-        self.button_delivery.image=self.image_3
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
+
+        # Create the second frame inside the canvas
+        self.second_frame = tk.Frame(self.my_canvas)
+
+        # Add the second frame to the canvas
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Images and buttons
+        self.image_1 = PhotoImage(file='images/delivery Small.png')
+        self.button_delivery = tk.Button(self.second_frame, text="Starters", font=('Arial', 18), image=self.image_1, command=self.address)
+        self.button_delivery.grid(row=0, column=0, pady=10, padx= 125)
+        self.button_delivery.image = self.image_1
+
+        self.image_2 = PhotoImage(file='images/dine-in Small.png')
+        self.button_dine_in = tk.Button(self.second_frame, text="Meals", font=('Arial', 18), image=self.image_2, command=self.booking_tables)
+        self.button_dine_in.grid(row=0, column=2, pady=10, padx = 60)
+        self.button_dine_in.image = self.image_2
+
+        self.image_3 = PhotoImage(file='images/takeaway Small.png')
+        self.button_takeaway = tk.Button(self.second_frame, text="Desserts", font=('Arial', 18), image=self.image_3, command=self.close_window)
+        self.button_takeaway.grid(row=1, column=1, padx = 30)
+        self.button_takeaway.image = self.image_3
 
         self.root.mainloop()
 
@@ -279,7 +297,7 @@ class mine:
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
         self.root.title("Enter your address")
-        self.root.configure(bg='white')
+        self.root.configure(bg='gray')
 
         self.label = tk.Label(self.root, text="Enter your address", bg='white', fg='black', font=('Courier New Bold', 22))
         self.label.pack(padx=20, pady=20)
@@ -349,25 +367,51 @@ class mine:
 
         self.root.mainloop()"""
 
-    """def admin(self):
-        self.close_window()
-        self.root = tk.Tk()
-        self.root.attributes('-fullscreen', True)
-        self.root.title("Admin")
-        
-        self.button = tk.Button(self.root , text="Manage Menu", font=('Arial', 18), command=exit)
-        self.button.pack(padx=10, pady=10)
-
-        self.button = tk.Button(self.root , text="Order Status", font=('Arial', 18), command=exit)
-        self.button.pack(padx=10, pady=10)
-
-        self.button = tk.Button(self.root , text="Tables/Staff", font=('Arial', 18), command=exit)
-        self.button.pack(padx=10, pady=10)
-
-        self.root.mainloop()"""
 
     def close_window(self):
         self.root.destroy()
 
 
-mine()
+
+
+
+def adding_orders(obj):
+    menu_stuff = Menu_Management.Menu_class()
+    starters, meals, desserts = menu_stuff.display()
+
+    cart = order_management.Cart_class()
+
+    try:
+        starters_selected = obj.starter_selection
+        for i in starters_selected:
+            if (starters_selected[i].get()):
+                cart.add(i, starters[i])
+    except AttributeError:
+        #hopefully this doesn't trigger..
+        pass
+
+    try:
+        meals_selected = obj.meal_selection
+        for i in meals_selected:
+            if (meals_selected[i].get()):
+                cart.add(i, meals[i])
+    except AttributeError:
+        #hopefully this doesn't trigger too..
+        pass
+
+    try:
+        desserts_selected = obj.dessert_selection
+        for i in desserts_selected:
+            if (desserts_selected[i].get()):
+                cart.add(i, desserts[i])
+    except AttributeError:
+        #even this :/ 
+        pass
+
+    return cart.checkout()
+
+
+if __name__ == "__main__":
+    obj = mine()
+    price = adding_orders(obj)
+    print(price)

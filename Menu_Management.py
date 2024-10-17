@@ -16,20 +16,20 @@ class Menu_class :
             writer=csv.writer(file)
             writer.writerows(rows)
     def display(self):
-        starters=[]
-        meals=[]
-        desserts=[]
+        starters={}
+        meals={}
+        desserts={}
         with open(self.filename,mode='r') as file:
             reader=csv.reader(file)
             next(reader)
             for row in reader:
                 if row[2] =="Starters":
-                    starters.append(row)
+                    starters[row[0]] = int(row[1])
                 elif row[2] =="Meals":
-                    meals.append(row)
+                    meals[row[0]] = int(row[1])
                 elif row[2] =="Desserts":
-                    desserts.append(row)
-        print("\n STARTERS")
+                    desserts[row[0]] = int(row[1])
+        '''print("\n STARTERS")
         for x in starters:
             print(f"Item: {x[0]}, Price:  {x[1]}")
         print("\n MEALS")
@@ -37,7 +37,9 @@ class Menu_class :
             print(f"Item:  {y[0]}, Price:  {y[1]}")
         print("\n DESSERT")
         for z in desserts:
-            print(f"Item: {z[0]}, Price:  {z[1]}")
+            print(f"Item: {z[0]}, Price:  {z[1]}")'''
+        
+        return starters, meals, desserts
     def get_starter_items(self):
         ls=[]
         with open(self.filename,mode='r') as file:
@@ -70,9 +72,10 @@ class Menu_class :
 if __name__ == "__main__":
 
     menu=Menu_class()
-    '''menu.display()
 
-    
+    a, b, c = menu.display()
+
+    '''
     menu.remove(["Veg Manchuria", "70", "Starters"])
 
     menu.display()
@@ -113,4 +116,5 @@ if __name__ == "__main__":
     menu.add("Choco Chip Cake","540","Desserts")
 
     menu.display()'''
-    print(menu.get_dessert_items())
+    (menu.get_dessert_items())
+    print(a, b, c)

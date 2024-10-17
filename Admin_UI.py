@@ -1,48 +1,69 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import PhotoImage
+from tkinter import ttk
 import csv
 
-class AdminUI:
+class admin_UI:
 
     def __init__(self):
-        self.login_window()
-
-    def login_window(self):
+        
         self.root = tk.Tk()
-        self.root.title("Login")
+        self.root.title("Customer/Admin")
         self.root.attributes('-fullscreen', True)
         self.root.configure(bg='black')
 
-        self.label = tk.Label(self.root, text="Enter Username:", font=('Courier New Bold', 22), bg='black', fg='white')
-        self.label.pack(pady=20)
+        self.image_path = PhotoImage(file=r'images/open page 1 Large.png')
+        self.bg_image = tk.Label(self.root, image=self.image_path)
+        self.bg_image.pack()
 
-        self.username_entry = tk.Entry(self.root, font=('Arial', 18))
-        self.username_entry.pack(pady=10)
-
-        self.label_password = tk.Label(self.root, text="Enter Password:", font=('Courier New Bold', 22), bg='black', fg='white')
-        self.label_password.pack(pady=20)
-
-        self.password_entry = tk.Entry(self.root, font=('Arial', 18), show='*')  # Hides password input
-        self.password_entry.pack(pady=10)
-
-        self.login_button = tk.Button(self.root, text="Login", font=('Arial', 18), command=self.check_login)
-        self.login_button.pack(pady=20)
+        # Removed the Customer button
+        self.button = tk.Button(self.root, text="Admin", font=('Times New Roman Bold', 18), height=2, fg='black', command=self.admin_login)
+        self.button.pack(padx=20, pady=20)
 
         self.root.mainloop()
 
-    def check_login(self):
+    def admin_login(self):
+        # Create a new login window for admin in fullscreen mode
+        self.login_window = tk.Toplevel(self.root)
+        self.login_window.title("Admin Login")
+        self.login_window.attributes('-fullscreen', True)
+        self.login_window.configure(bg='black')
+
+        # Username and password labels and entries
+        self.username_label = tk.Label(self.login_window, text="Username:", font=('Arial', 18), bg='black', fg='white')
+        self.username_label.pack(pady=10)
+        self.username_entry = tk.Entry(self.login_window, font=('Arial', 18))
+        self.username_entry.pack(pady=10)
+
+        self.password_label = tk.Label(self.login_window, text="Password:", font=('Arial', 18), bg='black', fg='white')
+        self.password_label.pack(pady=10)
+        self.password_entry = tk.Entry(self.login_window, show="*", font=('Arial', 18))
+        self.password_entry.pack(pady=10)
+
+        # Login button
+        self.login_button = tk.Button(self.login_window, text="Login", font=('Arial', 18), command=self.check_credentials)
+        self.login_button.pack(pady=10)
+
+        # Back button to exit login
+        self.back_button = tk.Button(self.login_window, text="Back", font=('Arial', 18), command=self.login_window.destroy)
+        self.back_button.pack(pady=10)
+
+    def check_credentials(self):
+        # Fetch the entered username and password
         username = self.username_entry.get()
         password = self.password_entry.get()
-        
-        # Check if username and password are correct
-        if username == "admin" and password == "admin":
-            self.root.destroy()  # Close the login window
-            self.admin()  # Open the admin panel
-        else:
-            messagebox.showinfo("Access Denied", "Invalid username or password.")
 
-    def admin(self):
+        # Check if the credentials match
+        if username == "admin" and password == "admin":
+            messagebox.showinfo("Login Success", "Welcome Admin!")
+            self.login_window.destroy()  # Close the login window
+            self.admin_panel()  # Open the admin panel
+        else:
+            messagebox.showerror("Login Failed", "Incorrect username or password")
+
+    def admin_panel(self):
+        self.close_window()
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
         self.root.title("Admin Panel")
@@ -83,10 +104,16 @@ class AdminUI:
         self.item_entry = tk.Entry(self.root, font=('Arial', 18))
         self.item_entry.pack(pady=10)
 
-        self.price_label = tk.Label(self.root, text="Price:", font=('Arial', 18), bg='black', fg='white')
-        self.price_label.pack(pady=10)
-        self.price_entry = tk.Entry(self.root, font=('Arial', 18))
-        self.price_entry.pack(pady=10)
+        # Dropdown for course selection (Starters, Meals, Desserts)
+        self.course_label = tk.Label(self.root, text="Course:", font=('Arial', 18), bg='black', fg='white')
+        self.course_label.pack(pady=10)
+
+        self.course_var = tk.StringVar(self.root)
+        self.course_var.set("Select Course")  # Default value for dropdown
+
+        self.course_dropdown = ttk.Combobox(self.root, textvariable=self.course_var, font=('Arial', 18), state='readonly')
+        self.course_dropdown['values'] = ('Starters', 'Meals', 'Desserts')
+        self.course_dropdown.pack(pady=10)
 
         # Buttons to add/remove items
         self.add_button = tk.Button(self.root, text="Add Item", font=('Arial', 18), command=self.add_menu_item)
@@ -95,21 +122,21 @@ class AdminUI:
         self.remove_button = tk.Button(self.root, text="Remove Item", font=('Arial', 18), command=self.remove_menu_item)
         self.remove_button.pack(pady=10)
 
-        self.back_button = tk.Button(self.root, text="Back", font=('Arial', 18), command=self.admin)
+        self.back_button = tk.Button(self.root, text="Back", font=('Arial', 18), command=self.admin_panel)
         self.back_button.pack(pady=10)
 
         self.root.mainloop()
 
     def add_menu_item(self):
         item = self.item_entry.get()
-        price = self.price_entry.get()
-        if item and price:
+        course = self.course_var.get()  # Get the selected course
+        if item and course != "Select Course":
             with open('menu.csv', 'a', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow([item, price])
+                writer.writerow([item, course])
             messagebox.showinfo("Success", "Item added to the menu.")
         else:
-            messagebox.showwarning("Input Error", "Please enter both item name and price.")
+            messagebox.showwarning("Input Error", "Please enter both item name and select a course.")
 
     def remove_menu_item(self):
         item_to_remove = self.item_entry.get()
@@ -151,7 +178,7 @@ class AdminUI:
             self.orders_display.insert(tk.END, "No current orders.\n")
 
         # Button to go back
-        self.back_button = tk.Button(self.root, text="Back", font=('Arial', 18), command=self.admin)
+        self.back_button = tk.Button(self.root, text="Back", font=('Arial', 18), command=self.admin_panel)
         self.back_button.pack(pady=10)
 
         self.root.mainloop()
@@ -171,4 +198,5 @@ class AdminUI:
     def close_window(self):
         self.root.destroy()
 
-AdminUI()
+
+admin_UI()

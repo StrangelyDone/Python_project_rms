@@ -17,19 +17,45 @@ class mine:
         self.root.configure(bg='black')
 
         #figure some way to know the row span of a device so it works nicely! 
-        self.row_length = 2
+        self.row_length = 4
 
         self.image_path=PhotoImage(file='images/open page 1 Large.png')
         self.bg_image=tk.Label(self.root, image=self.image_path)
         self.bg_image.pack()
 
-        self.button = tk.Button(self.root , text="Menu", font=('Courier New Bold', 18), height=2, fg='black', command=self.menu)
-        self.button.pack(padx=20, pady=20)
+        self.button1 = tk.Button(self.root , text="Menu", font=('Courier New Bold', 18), height=2, fg='black', command=self.menu, relief="flat", bg="white")
+        self.button1.pack(padx=20, pady=20)
 
-        self.button = tk.Button(self.root , text="Order History", font=('Times New Roman Bold', 18), height=2, fg='black', command=exit)
-        self.button.pack(padx=20, pady=20)
+        self.button2 = tk.Button(self.root , text="Order History", font=('Times New Roman Bold', 18), height=2, fg='black', command=exit, relief="flat", bg="white")
+        self.button2.pack(padx=20, pady=20)
+
+        def on_enter(e):
+            self.button1['bg'] = "#333"
+            self.button1['fg'] = "white"
+
+        def on_leave(e):
+            self.button1['bg'] = "white"
+            self.button1['fg'] = "black"
+
+        self.button1.bind("<Enter>", on_enter)
+        self.button1.bind("<Leave>", on_leave)
+
+        def on_enter(e):
+            self.button2['bg'] = "#333"
+            self.button2['fg'] = "white"
+
+        def on_leave(e):
+            self.button2['bg'] = "white"
+            self.button2['fg'] = "black"
+
+        self.button2.bind("<Enter>", on_enter)
+        self.button2.bind("<Leave>", on_leave)
 
         self.root.mainloop()
+
+    def go_back(self):
+        self.root.destroy()
+        self.__init__()
 
     def menu(self):
         self.close_window()
@@ -70,8 +96,36 @@ class mine:
 
         self.image_3 = PhotoImage(file='images/desserts Small.png')
         self.button_desserts = tk.Button(self.second_frame, text="Desserts", font=('Arial', 18), image=self.image_3, command=self.desserts)
-        self.button_desserts.grid(row=1, column=1, pady = 30)
+        self.button_desserts.grid(row=1, column=1, pady = 10)
         self.button_desserts.image = self.image_3
+
+        self.back = tk.Button(self.second_frame, text="back", font=('Arial', 18), command = self.go_back, relief="flat", bg="white", fg="black",)
+        self.back.grid(row=2, column=0, pady=10, columnspan=3, sticky= 'sw', padx = 40)
+
+        def on_enter(e):
+            self.back['bg'] = "#333"
+            self.back['fg'] = "white"
+
+        def on_leave(e):
+            self.back['bg'] = "white"
+            self.back['fg'] = "black"
+
+        self.back.bind("<Enter>", on_enter)
+        self.back.bind("<Leave>", on_leave)
+
+        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer, relief="flat", bg="white", fg="black",)
+        self.proceed.grid(row=2, column=2, pady=10, columnspan=3, sticky= 'se')
+
+        def on_enter(e):
+            self.proceed['bg'] = "#333"
+            self.proceed['fg'] = "white"
+
+        def on_leave(e):
+            self.proceed['bg'] = "white"
+            self.proceed['fg'] = "black"
+
+        self.proceed.bind("<Enter>", on_enter)
+        self.proceed.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
@@ -118,17 +172,20 @@ class mine:
             self.check.grid(row=i // self.row_length, column=i % self.row_length, padx=10, pady=15)
             self.check.image = image1
 
-        # Confirm selected dishes checkbutton (placed below the grid)
-        self.check = tk.Checkbutton(self.second_frame, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state)
-        self.check.grid(row=(len(starters) // 3) + 1, column=0, pady=20, columnspan=3)
+        # Back/confirm button
+        self.back = tk.Button(self.second_frame, text="Confirm", font=('Arial', 18), command=self.menu, relief="flat", bg="white", fg="black")
+        self.back.grid(row=(len(starters) // 3) + 2, column=1, padx=50, pady=10, sticky = 'se')
 
-        # Back button
-        self.back = tk.Button(self.second_frame, text="Go back", font=('Arial', 18), command=self.menu)
-        self.back.grid(row=(len(starters) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
+        def on_enter(e):
+            self.back['bg'] = "#333"
+            self.back['fg'] = "white"
 
-        # Proceed button
-        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer)
-        self.proceed.grid(row=(len(starters) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
+        def on_leave(e):
+            self.back['bg'] = "white"
+            self.back['fg'] = "black"
+
+        self.back.bind("<Enter>", on_enter)
+        self.back.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
@@ -175,17 +232,20 @@ class mine:
             self.check.grid(row=i // self.row_length, column=i % self.row_length, padx=10, pady=15)
             self.check.image = image1
 
-        # Confirm selected dishes checkbutton (placed below the grid)
-        self.check = tk.Checkbutton(self.second_frame, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state)
-        self.check.grid(row=(len(meals) // 3) + 1, column=0, pady=20, columnspan=3)
-
         # Back button
-        self.back = tk.Button(self.second_frame, text="Go back", font=('Arial', 18), command=self.menu)
+        self.back = tk.Button(self.second_frame, text="Confirm", font=('Arial', 18), command=self.menu, relief="flat", bg="white", fg="black")
         self.back.grid(row=(len(meals) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
-        # Proceed button
-        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer)
-        self.proceed.grid(row=(len(meals) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
+        def on_enter(e):
+            self.back['bg'] = "#333"
+            self.back['fg'] = "white"
+
+        def on_leave(e):
+            self.back['bg'] = "white"
+            self.back['fg'] = "black"
+
+        self.back.bind("<Enter>", on_enter)
+        self.back.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
@@ -232,17 +292,20 @@ class mine:
             self.check.grid(row=i // self.row_length, column=i % self.row_length, padx=10, pady=15)
             self.check.image = image1
 
-        # Confirm selected dishes checkbutton (placed below the grid)
-        self.check = tk.Checkbutton(self.second_frame, text="Confirm selected dishes", font=('Arial', 16), bg='black', fg='white', variable=self.check_state)
-        self.check.grid(row=(len(desserts) // 3) + 1, column=0, pady=20, columnspan=3)
-
         # Back button
-        self.back = tk.Button(self.second_frame, text="Go back", font=('Arial', 18), command=self.menu)
+        self.back = tk.Button(self.second_frame, text="Confirm", font=('Arial', 18), command=self.menu, relief="flat", bg="white", fg="black")
         self.back.grid(row=(len(desserts) // 3) + 2, column=0, padx=100, pady=10, columnspan=3)
 
-        # Proceed button
-        self.proceed = tk.Button(self.second_frame, text="Proceed", font=('Arial', 18), command = self.customer)
-        self.proceed.grid(row=(len(desserts) // 3) + 3, column=0, padx=100, pady=10, columnspan=3)
+        def on_enter(e):
+            self.back['bg'] = "#333"
+            self.back['fg'] = "white"
+
+        def on_leave(e):
+            self.back['bg'] = "white"
+            self.back['fg'] = "black"
+
+        self.back.bind("<Enter>", on_enter)
+        self.back.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
@@ -337,28 +400,26 @@ class mine:
         self.buttonframe.columnconfigure(0, weight=1)
         self.buttonframe.columnconfigure(1, weight=1)
 
-        '''self.btn1=tk.Button(self.buttonframe, text="2", font=('Arial', 18), command=self.payment)
-        self.btn1.grid(row=0, column=0, sticky=tk.W+tk.E)
-
-        self.btn2=tk.Button(self.buttonframe, text="3-4", font=('Arial', 18), command=self.payment)
-        self.btn2.grid(row=0, column=1, sticky=tk.W+tk.E)
-
-        self.btn3=tk.Button(self.buttonframe, text="6-5", font=('Arial', 18), command=self.payment)
-        self.btn3.grid(row=1, column=0, sticky=tk.W+tk.E)
-
-        self.btn4=tk.Button(self.buttonframe, text="8-10", font=('Arial', 18), command=self.payment)
-        self.btn4.grid(row=1, column=1, sticky=tk.W+tk.E)
-
-        self.buttonframe.pack()'''
         options=["1","2","3","4","5","6","7"]
         combo_box=ttk.Combobox(self.root,values=options)
         combo_box.pack(pady=10)
         combo_box.current(0)
-        self.btn=tk.Button(self.buttonframe,text="Proceed",command=self.payment)
+
+        self.btn=tk.Button(self.buttonframe,text="Proceed",command=self.payment, relief="flat", bg="white", fg="black")
         self.btn.grid(row=1,column=1,sticky=tk.W+tk.E)
+
+        def on_enter(e):
+            self.btn['bg'] = "#333"
+            self.btn['fg'] = "white"
+
+        def on_leave(e):
+            self.btn['bg'] = "white"
+            self.btn['fg'] = "black"
+
+        self.btn.bind("<Enter>", on_enter)
+        self.btn.bind("<Leave>", on_leave)
+
         self.buttonframe.pack()
-
-
         self.root.mainloop()
 
     def adding_orders(obj):
@@ -373,7 +434,6 @@ class mine:
                 if (starters_selected[i].get()):
                     cart.add(i, starters[i])
         except AttributeError:
-            #hopefully this doesn't trigger..
             pass
 
         try:
@@ -382,7 +442,6 @@ class mine:
                 if (meals_selected[i].get()):
                     cart.add(i, meals[i])
         except AttributeError:
-            #hopefully this doesn't trigger too..
             pass
 
         try:
@@ -391,7 +450,6 @@ class mine:
                 if (desserts_selected[i].get()):
                     cart.add(i, desserts[i])
         except AttributeError:
-            #even this :/ 
             pass
 
         return cart.checkout()
@@ -404,36 +462,25 @@ class mine:
         self.root.title("Payment")
         self.cost = int(self.adding_orders())
 
-        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22), bg='white',command=self.sucpay)
+        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22),command=self.sucpay, relief="flat", bg="white", fg="black")
         self.button.pack(pady=70)
+
+        def on_enter(e):
+            self.button['bg'] = "#333"
+            self.button['fg'] = "white"
+
+        def on_leave(e):
+            self.button['bg'] = "white"
+            self.button['fg'] = "black"
+
+        self.button.bind("<Enter>", on_enter)
+        self.button.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
     def sucpay(self):
         self.close_window()
         messagebox.showinfo("Payment Portal","Payment Successful")
-
-    """def admin(self):
-        self.close_window()
-        self.root = tk.Tk()
-        self.root.attributes('-fullscreen', True)
-        self.root.title("Admin")
-
-    #def cost(self):
-        #self.cost=print("Your meal comes to a total of")
-
-    def payment(self):
-        self.close_window
-        self.root = tk.Tk()
-        self.root.attributes('-fullscreen', True)
-        self.root.configure(bg='white')
-        self.root.title("Payment")
-
-        self.button = tk.Button(self.root, text=self.cost, font = ("Courier New Bold", 22), bg='white')
-        self.button.pack(pady=70)
-
-        self.root.mainloop()"""
-
 
     def close_window(self):
         self.root.destroy()

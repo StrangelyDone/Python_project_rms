@@ -16,54 +16,25 @@ class admin_UI:
         self.bg_image = tk.Label(self.root, image=self.image_path)
         self.bg_image.pack()
 
-        # Removed the Customer button
-        self.button = tk.Button(self.root, text="Admin", font=('Times New Roman Bold', 18), height=2, fg='black', command=self.admin_login)
+        self.button = tk.Button(self.root, text="Admin", font=('Times New Roman Bold', 18), height=2, fg='black', command=self.admin_panel, bg = "white", relief = "flat")
         self.button.pack(padx=20, pady=20)
+
+        def on_enter(e):
+            self.button['bg'] = "#333"
+            self.button['fg'] = "white"
+
+        def on_leave(e):
+            self.button['bg'] = "white"
+            self.button['fg'] = "black"
+
+        self.button.bind("<Enter>", on_enter)
+        self.button.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
-    def admin_login(self):
-        # Create a new login window for admin in fullscreen mode
-        self.login_window = tk.Toplevel(self.root)
-        self.login_window.title("Admin Login")
-        self.login_window.attributes('-fullscreen', True)
-        self.login_window.configure(bg='black')
-
-        # Create a frame to center the login components
-        self.login_frame = tk.Frame(self.login_window, bg='black')
-        self.login_frame.pack(expand=True)
-
-        # Username and password labels and entries
-        self.username_label = tk.Label(self.login_frame, text="Username:", font=('Arial', 18), bg='black', fg='white')
-        self.username_label.grid(row=0, column=0, padx=10, pady=10, sticky='e')
-        self.username_entry = tk.Entry(self.login_frame, font=('Arial', 18))
-        self.username_entry.grid(row=0, column=1, padx=10, pady=10)
-
-        self.password_label = tk.Label(self.login_frame, text="Password:", font=('Arial', 18), bg='black', fg='white')
-        self.password_label.grid(row=1, column=0, padx=10, pady=10, sticky='e')
-        self.password_entry = tk.Entry(self.login_frame, show="*", font=('Arial', 18))
-        self.password_entry.grid(row=1, column=1, padx=10, pady=10)
-
-        # Login button
-        self.login_button = tk.Button(self.login_frame, text="Login", font=('Arial', 18), command=self.check_credentials)
-        self.login_button.grid(row=2, column=0, columnspan=2, pady=10)
-
-        # Back button to exit login
-        self.back_button = tk.Button(self.login_frame, text="Back", font=('Arial', 18), command=self.login_window.destroy)
-        self.back_button.grid(row=3, column=0, columnspan=2, pady=10)
-
-    def check_credentials(self):
-        # Fetch the entered username and password
-        username = self.username_entry.get()
-        password = self.password_entry.get()
-
-        # Check if the credentials match
-        if username == "admin" and password == "admin":
-            messagebox.showinfo("Login Success", "Welcome Admin!")
-            self.login_window.destroy()  # Close the login window
-            self.admin_panel()  # Open the admin panel
-        else:
-            messagebox.showerror("Login Failed", "Incorrect username or password")
+    def self_invoker(self):
+        self.root.destroy()
+        self.__init__()
 
     def admin_panel(self):
         self.close_window()
@@ -72,25 +43,48 @@ class admin_UI:
         self.root.title("Admin Panel")
         self.root.configure(bg='black')
 
-        # Create a frame to center the admin panel components
-        self.admin_frame = tk.Frame(self.root, bg='black')
-        self.admin_frame.pack(expand=True)
+        self.label = tk.Label(self.root, text="Admin Panel", font=('Courier New Bold', 25), bg='black', fg='white')
+        self.label.pack(padx=20, pady=20)
 
-        # Admin panel title
-        self.label = tk.Label(self.admin_frame, text="Admin Panel", font=('Courier New Bold', 22), bg='black', fg='white')
-        self.label.grid(row=0, column=0, columnspan=2, padx=20, pady=20)
+        self.main_frame = tk.Frame(self.root, bg='black')
+        self.main_frame.pack(fill='both', expand=1)
 
-        # Button to manage menu
-        self.button_manage_menu = tk.Button(self.admin_frame, text="Manage Menu", font=('Arial', 18), height=2, command=self.manage_menu)
-        self.button_manage_menu.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+        # Create a canvas but without the scrollbar
+        self.my_canvas = tk.Canvas(self.main_frame, bg='black')
+        self.my_canvas.pack(side='left', fill='both', expand=1)
 
-        # Button to view current orders
-        self.button_view_orders = tk.Button(self.admin_frame, text="Current Orders", font=('Arial', 18), height=2, command=self.view_orders)
-        self.button_view_orders.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+        # Bind the canvas resize event but without scrollbar adjustments
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
 
-        # Button to exit admin panel
-        self.back_button = tk.Button(self.admin_frame, text="Exit Admin Panel", font=('Arial', 18), height=2, command=self.admin_login_redirect)
-        self.back_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+        # Create the second frame inside the canvas
+        self.second_frame = tk.Frame(self.my_canvas, bg='black')
+        # Add the second frame to the canvas
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Images and buttons
+        self.image_1 = PhotoImage(file='images/starters Small.png')
+        self.button_manage_menu = tk.Button(self.second_frame, text="Starters", font=('Arial', 18), image=self.image_1, command=self.manage_menu)
+        self.button_manage_menu.grid(row=0, column=0, padx=250, pady=100)
+        self.button_manage_menu.image = self.image_1
+
+        self.image_2 = PhotoImage(file='images/meals Small.png')
+        self.button_current_orders = tk.Button(self.second_frame, text="Meals", font=('Arial', 18), image=self.image_2, command=self.view_orders)
+        self.button_current_orders.grid(row=0, column=2, padx=120, pady=100)
+        self.button_current_orders.image = self.image_2
+
+        self.back = tk.Button(self.second_frame, text="back", font=('Arial', 18), command = self.self_invoker, relief="flat", bg="white", fg="black")
+        self.back.grid(row=3, column=0, columnspan=3, sticky= 'sw', padx = 40, pady = 102) #the absolute breaking point for pady
+
+        def on_enter(e):
+            self.back['bg'] = "#333"
+            self.back['fg'] = "white"
+
+        def on_leave(e):
+            self.back['bg'] = "white"
+            self.back['fg'] = "black"
+
+        self.back.bind("<Enter>", on_enter)
+        self.back.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
@@ -98,39 +92,65 @@ class admin_UI:
         self.close_window()
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
-        self.root.title("Manage Menu")
+        self.root.title("Admin Panel")
         self.root.configure(bg='black')
 
-        # Create a frame to center the manage menu components
-        self.manage_frame = tk.Frame(self.root, bg='black')
-        self.manage_frame.pack(expand=True)
+        self.label = tk.Label(self.root, text="Manage Menu", font=('Courier New Bold', 25), bg='black', fg='white')
+        self.label.pack(padx=20, pady=20)
 
-        # Admin manage menu title
-        self.label = tk.Label(self.manage_frame, text="Manage Menu", font=('Courier New Bold', 22), bg='black', fg='white')
-        self.label.grid(row=0, column=0, columnspan=2, padx=20, pady=20)
+        self.main_frame = tk.Frame(self.root, bg='black')
+        self.main_frame.pack(fill='both', expand=1)
 
-        # Separate buttons for Add Item and Remove Item
-        self.add_button = tk.Button(self.manage_frame, text="Add Item", font=('Arial', 18), command=self.add_item_window)
-        self.add_button.grid(row=1, column=0, padx=10, pady=10)
+        # Create a canvas but without the scrollbar
+        self.my_canvas = tk.Canvas(self.main_frame, bg='black')
+        self.my_canvas.pack(side='left', fill='both', expand=1)
 
-        self.remove_button = tk.Button(self.manage_frame, text="Remove Item", font=('Arial', 18), command=self.remove_item_window)
-        self.remove_button.grid(row=1, column=1, padx=10, pady=10)
+        # Bind the canvas resize event but without scrollbar adjustments
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
 
-        # Back button
-        self.back_button = tk.Button(self.manage_frame, text="Back", font=('Arial', 18), command=self.admin_panel)
-        self.back_button.grid(row=2, column=0, columnspan=2, pady=10)
+        # Create the second frame inside the canvas
+        self.second_frame = tk.Frame(self.my_canvas, bg='black')
+        # Add the second frame to the canvas
+        self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Images and buttons
+        self.image_1 = PhotoImage(file='images/starters Small.png')
+        self.add_item_button = tk.Button(self.second_frame, text="Starters", font=('Arial', 18), image=self.image_1, command=self.add_item_window)
+        self.add_item_button.grid(row=0, column=0, padx=250, pady=100)
+        self.add_item_button.image = self.image_1
+
+        self.image_2 = PhotoImage(file='images/meals Small.png')
+        self.remove_item_button = tk.Button(self.second_frame, text="Meals", font=('Arial', 18), image=self.image_2, command=self.remove_item_window)
+        self.remove_item_button.grid(row=0, column=2, padx=120, pady=100)
+        self.remove_item_button.image = self.image_2
+
+        self.back = tk.Button(self.second_frame, text="back", font=('Arial', 18), command = self.admin_panel, relief="flat", bg="white", fg="black")
+        self.back.grid(row=3, column=0, columnspan=3, sticky= 'sw', padx = 40, pady = 102) #the absolute breaking point for pady
+
+        def on_enter(e):
+            self.back['bg'] = "#333"
+            self.back['fg'] = "white"
+
+        def on_leave(e):
+            self.back['bg'] = "white"
+            self.back['fg'] = "black"
+
+        self.back.bind("<Enter>", on_enter)
+        self.back.bind("<Leave>", on_leave)
 
         self.root.mainloop()
 
     # Window for adding item
     def add_item_window(self):
-        self.add_window = tk.Toplevel(self.root)
-        self.add_window.attributes('-fullscreen', True)
-        self.add_window.title("Add Item")
-        self.add_window.configure(bg='black')
+        self.add_item_pop_up = tk.Tk()
+        self.add_item_pop_up.title("Add Item")
+        self.add_item_pop_up.configure(bg='black')
+        self.add_item_pop_up.geometry("500x300")
+        self.add_item_pop_up.minsize(width=500, height=300)
+        self.add_item_pop_up.maxsize(width=500, height=300)
 
         # Create a frame to center the add item components
-        self.add_frame = tk.Frame(self.add_window, bg='black')
+        self.add_frame = tk.Frame(self.add_item_pop_up, bg='black')
         self.add_frame.pack(expand=True)
 
         # Add item title
@@ -155,22 +175,32 @@ class admin_UI:
         self.course_dropdown.grid(row=2, column=1, padx=10, pady=10)
 
         # Add item button
-        self.confirm_add_button = tk.Button(self.add_frame, text="Add Item", font=('Arial', 18), command=self.add_menu_item)
+        self.confirm_add_button = tk.Button(self.add_frame, text="Add Item", font=('Arial', 18), command=self.add_menu_item, relief = 'flat')
         self.confirm_add_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-        # Back button
-        self.back_button = tk.Button(self.add_frame, text="Back", font=('Arial', 18), command=self.add_window.destroy)
-        self.back_button.grid(row=4, column=0, columnspan=2, pady=10)
+        def on_enter(e):
+            self.confirm_add_button['bg'] = "#333"
+            self.confirm_add_button['fg'] = "white"
+
+        def on_leave(e):
+            self.confirm_add_button['bg'] = "white"
+            self.confirm_add_button['fg'] = "black"
+
+        self.confirm_add_button.bind("<Enter>", on_enter)
+        self.confirm_add_button.bind("<Leave>", on_leave)
+
 
     # Window for removing item
     def remove_item_window(self):
-        self.remove_window = tk.Toplevel(self.root)
-        self.remove_window.attributes('-fullscreen', True)
-        self.remove_window.title("Remove Item")
-        self.remove_window.configure(bg='black')
+        self.remove_item_pop_up = tk.Tk()
+        self.remove_item_pop_up.title("Remove Item")
+        self.remove_item_pop_up.configure(bg='black')
+        self.remove_item_pop_up.geometry("500x250")
+        self.remove_item_pop_up.minsize(width=500, height=250)
+        self.remove_item_pop_up.maxsize(width=500, height=250)
 
         # Create a frame to center the remove item components
-        self.remove_frame = tk.Frame(self.remove_window, bg='black')
+        self.remove_frame = tk.Frame(self.remove_item_pop_up, bg='black')
         self.remove_frame.pack(expand=True)
 
         # Remove item title
@@ -184,12 +214,20 @@ class admin_UI:
         self.item_entry.grid(row=1, column=1, padx=10, pady=10)
 
         # Remove item button
-        self.confirm_remove_button = tk.Button(self.remove_frame, text="Remove Item", font=('Arial', 18), command=self.remove_menu_item)
+        self.confirm_remove_button = tk.Button(self.remove_frame, text="Remove Item", font=('Arial', 18), command=self.remove_menu_item, relief = 'flat')
         self.confirm_remove_button.grid(row=2, column=0, columnspan=2, pady=10)
 
-        # Back button
-        self.back_button = tk.Button(self.remove_frame, text="Back", font=('Arial', 18), command=self.remove_window.destroy)
-        self.back_button.grid(row=3, column=0, columnspan=2, pady=10)
+        def on_enter(e):
+            self.confirm_remove_button['bg'] = "#333"
+            self.confirm_remove_button['fg'] = "white"
+
+        def on_leave(e):
+            self.confirm_remove_button['bg'] = "white"
+            self.confirm_remove_button['fg'] = "black"
+
+        self.confirm_remove_button.bind("<Enter>", on_enter)
+        self.confirm_remove_button.bind("<Leave>", on_leave)
+
 
     def add_menu_item(self):
         item = self.item_entry.get()
@@ -230,14 +268,28 @@ class admin_UI:
         self.label = tk.Label(self.root, text="Current Orders", font=('Courier New Bold', 22), bg='black', fg='white')
         self.label.pack(padx=20, pady=20)
 
+        # Create a frame to hold the Text widget and Scrollbar
+        text_frame = tk.Frame(self.root, bg='black')
+        text_frame.pack(pady=20)
+
+        # Add a vertical scrollbar
+        scrollbar = tk.Scrollbar(text_frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
         # Displaying the orders from CSV
         orders = self.read_orders()
-        self.orders_display = tk.Text(self.root, font=('Arial', 18), bg='white', fg='black', height=15, width=60)
-        self.orders_display.pack(pady=20)
+        
+        # Add the Text widget and associate it with the scrollbar
+        self.orders_display = tk.Text(text_frame, font=('Arial', 18), bg='white', fg='black', height=15, width=60, yscrollcommand=scrollbar.set)
+        self.orders_display.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
+        # Configure the scrollbar to work with the Text widget
+        scrollbar.config(command=self.orders_display.yview)
 
+        # Insert orders into the Text widget
         if orders:
             for order in orders:
-                self.orders_display.insert(tk.END, f"Order ID: {order[0]}, Items: {order[2]}, Total: {order[3]}, Status: {order[4]}\n")
+                self.orders_display.insert(tk.END, f"Items: {order[0]}\n")
         else:
             self.orders_display.insert(tk.END, "No current orders.\n")
 
@@ -251,7 +303,7 @@ class admin_UI:
         # Reading order records from a CSV file
         orders = []
         try:
-            with open('orders.csv', 'r') as file:
+            with open('orders_admin.csv', 'r') as file:
                 reader = csv.reader(file)
                 for row in reader:
                     orders.append(row)

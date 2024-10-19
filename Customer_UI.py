@@ -462,6 +462,10 @@ class mine:
         self.root.title("Payment")
         self.cost = int(self.adding_orders())
 
+        self.image_path=PhotoImage(file='images/payment image.png')
+        self.bg_image=tk.Label(self.root, image=self.image_path)
+        self.bg_image.pack()
+
         self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22),command=self.sucpay, relief="flat", bg="white", fg="black")
         self.button.pack(pady=70)
 

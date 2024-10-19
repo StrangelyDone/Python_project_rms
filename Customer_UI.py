@@ -6,6 +6,7 @@ from tkinter import ttk
 import Menu_Management
 import order_management
 
+Username = "User1"
 
 class mine:
 
@@ -19,9 +20,9 @@ class mine:
         #figure some way to know the row span of a device so it works nicely! 
         self.row_length = 4
 
-        self.image_path=PhotoImage(file='images/open page 1 Large.png')
-        self.bg_image=tk.Label(self.root, image=self.image_path)
-        self.bg_image.pack()
+        image_path=PhotoImage(master = self.root, file='images/open page 1 Large.png')
+        bg_image=tk.Label(self.root, image=image_path)
+        bg_image.pack()
 
         self.button1 = tk.Button(self.root , text="Menu", font=('Courier New Bold', 18), height=2, fg='black', command=self.menu, relief="flat", bg="white")
         self.button1.pack(padx=20, pady=20)
@@ -452,7 +453,7 @@ class mine:
         except AttributeError:
             pass
 
-        return cart.checkout()
+        return cart.checkout(Username)
     
     def payment(self):
         self.close_window()
@@ -466,7 +467,7 @@ class mine:
         self.bg_image=tk.Label(self.root, image=self.image_path)
         self.bg_image.pack()
 
-        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22),command=self.sucpay, relief="flat", bg="white", fg="black")
+        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22), relief="flat", bg="white", fg="black")
         self.button.pack(pady=70)
 
         def on_enter(e):
@@ -481,10 +482,6 @@ class mine:
         self.button.bind("<Leave>", on_leave)
 
         self.root.mainloop()
-
-    def sucpay(self):
-        self.close_window()
-        messagebox.showinfo("Payment Portal","Payment Successful")
 
     def close_window(self):
         self.root.destroy()

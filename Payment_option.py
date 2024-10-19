@@ -145,4 +145,5 @@ cancel_button = tk.Button(root, text="Cancel", font=('Arial', 18), command=cance
 cancel_button.pack(pady=5)
 
 # Start the Tkinter event loop
-root.mainloop()
+def trigger():
+    root.mainloop()

@@ -62,12 +62,12 @@ class admin_UI:
         self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
 
         # Images and buttons
-        self.image_1 = PhotoImage(file='images/starters Small.png')
+        self.image_1 = PhotoImage(file='images/manage menu.png')
         self.button_manage_menu = tk.Button(self.second_frame, text="Starters", font=('Arial', 18), image=self.image_1, command=self.manage_menu)
         self.button_manage_menu.grid(row=0, column=0, padx=250, pady=100)
         self.button_manage_menu.image = self.image_1
 
-        self.image_2 = PhotoImage(file='images/meals Small.png')
+        self.image_2 = PhotoImage(file='images/current orders.png')
         self.button_current_orders = tk.Button(self.second_frame, text="Meals", font=('Arial', 18), image=self.image_2, command=self.view_orders)
         self.button_current_orders.grid(row=0, column=2, padx=120, pady=100)
         self.button_current_orders.image = self.image_2
@@ -114,12 +114,12 @@ class admin_UI:
         self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
 
         # Images and buttons
-        self.image_1 = PhotoImage(file='images/starters Small.png')
+        self.image_1 = PhotoImage(file='images/add item.png')
         self.add_item_button = tk.Button(self.second_frame, text="Starters", font=('Arial', 18), image=self.image_1, command=self.add_item_window)
         self.add_item_button.grid(row=0, column=0, padx=250, pady=100)
         self.add_item_button.image = self.image_1
 
-        self.image_2 = PhotoImage(file='images/meals Small.png')
+        self.image_2 = PhotoImage(file='images/remove item.png')
         self.remove_item_button = tk.Button(self.second_frame, text="Meals", font=('Arial', 18), image=self.image_2, command=self.remove_item_window)
         self.remove_item_button.grid(row=0, column=2, padx=120, pady=100)
         self.remove_item_button.image = self.image_2

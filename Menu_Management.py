@@ -11,7 +11,7 @@ class Menu_class :
         rows=[]
         with open(self.filename,mode='r') as file:
             reader=csv.reader(file)
-            rows=[row for row in reader if row != item]
+            rows=[row for row in reader if row[0] != item]
         with open(self.filename,mode='w',newline='') as file:
             writer=csv.writer(file)
             writer.writerows(rows)

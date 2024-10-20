@@ -245,7 +245,7 @@ class admin_UI:
 
             menu = Menu_Management.Menu_class()
             a, b, c = menu.display()
-            items = a + b + c
+            items = list(a.keys()) + list(b.keys()) + list(c.keys())
 
             if item_name in items:
                 menu.remove(item_name)

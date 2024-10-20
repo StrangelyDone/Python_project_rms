@@ -1,7 +1,6 @@
 item,price,category
 veg manchuria,70,Starters
 chicken manchuria,100,Starters
-fruit salad,50,Starters
 vegetable salad,30,Starters
 fruit custard,50,Starters
 chicken dum biryani,300,Meals
@@ -15,4 +14,4 @@ chocolate ball,30,Desserts
 choco walnut brownie,60,Desserts
 choco chip brownie,60,Desserts
 choco chip cake,540,Desserts
-burger,80,Meals
+fruit salad,50,Starters

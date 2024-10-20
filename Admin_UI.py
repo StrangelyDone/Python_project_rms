@@ -1,10 +1,11 @@
 import tkinter as tk
-from tkinter import messagebox
-from tkinter import PhotoImage
-from tkinter import ttk
-import csv
+from tkinter import messagebox, PhotoImage, ttk, filedialog
 import Menu_Management
 import order_management
+import os
+import shutil
+
+error = None
 
 class admin_UI:
 
@@ -183,6 +184,7 @@ class admin_UI:
 
 
         def add_menu_item():
+            global error
             item_name = self.item_entry.get()
             item_type = self.course_dropdown.get()
             if self.item_price != '':
@@ -191,15 +193,48 @@ class admin_UI:
                 messagebox.showerror("Error", "Enter price!")
                 return
             
-            print(item_type, item_name, item_price)
+            #print(item_type, item_name, item_price)
 
             menu = Menu_Management.Menu_class()
             if item_name != '':
+                imageUploader(item_name)
+                if not error:
+                    messagebox.showerror("Error", "Please add an image")
+                    return
                 menu.add(item_name, item_price, item_type)
                 messagebox.showinfo("Success", "Item added to menu successfully!")
                 self.add_item_pop_up.destroy()
             else:
                 messagebox.showerror("Error", "Enter item name")
+
+        def imageUploader(item):
+            global error
+            file_types = [("PNG files", "*.png")]
+            messagebox.showinfo("Information", "Please select the appropriate image from this project's image directory")
+
+            image_path = filedialog.askopenfilename(filetypes=file_types)
+
+            if image_path:
+                messagebox.showinfo("Information", "Please select the images folder in this project's directory")
+
+                save_directory = filedialog.askdirectory()
+
+                if save_directory:
+                    # Extract the filename from the image path
+                    image_filename = item + '.png'
+
+                    # Create the full save path
+                    save_path = os.path.join(save_directory, image_filename)
+
+                    # Copy the image to the selected directory
+                    shutil.copy(image_path, save_path)
+                    error = False
+                else:
+                    messagebox.showerror("Error", "No save directory chosen")
+                    error = True
+            else:
+                messagebox.showerror("Error", "No image selected")
+                self.error = True
 
         # Add item button
         self.confirm_add_button = tk.Button(self.add_frame, text="Add Item", font=('Arial', 18), command=add_menu_item, relief = 'flat')

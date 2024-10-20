@@ -48,8 +48,11 @@ class Cart_class:
             for i in csv_fp:
                 if i == '':
                     continue
-                if i[0] != "user name":
-                    orders.append(i)
+                try:
+                    if i[0] != "user name":
+                        orders.append(i)
+                except IndexError:
+                    pass
         return orders
 
     def order_reader_user(self, user_name):

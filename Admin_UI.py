@@ -19,9 +19,15 @@ class admin_UI:
         self.bg_image = tk.Label(self.root, image=self.image_path)
         self.bg_image.pack()
 
-        self.button = tk.Button(self.root, text="Admin", font=('Times New Roman Bold', 18), height=2, fg='black', command=self.admin_panel, bg = "white", relief = "flat")
+        # Admin button
+        self.button = tk.Button(self.root, text="Admin", font=('Times New Roman Bold', 18), height=2, fg='black', command=self.admin_panel, bg="white", relief="flat")
         self.button.pack(padx=20, pady=20)
 
+        # Back to Login button
+        self.back_to_login_button = tk.Button(self.root, text="Back to Login", font=('Times New Roman Bold', 18), height=2, fg='black', bg="white", relief="flat", command=self.root.quit)
+        self.back_to_login_button.pack(padx=20, pady=20)
+
+        # Button hover effects
         def on_enter(e):
             self.button['bg'] = "#333"
             self.button['fg'] = "white"
@@ -30,11 +36,21 @@ class admin_UI:
             self.button['bg'] = "white"
             self.button['fg'] = "black"
 
+        def on_enter_back(e):
+            self.back_to_login_button['bg'] = "#333"
+            self.back_to_login_button['fg'] = "white"
+
+        def on_leave_back(e):
+            self.back_to_login_button['bg'] = "white"
+            self.back_to_login_button['fg'] = "black"
+
         self.button.bind("<Enter>", on_enter)
         self.button.bind("<Leave>", on_leave)
+        self.back_to_login_button.bind("<Enter>", on_enter_back)
+        self.back_to_login_button.bind("<Leave>", on_leave_back)
 
         self.root.mainloop()
-
+        
     def self_invoker(self):
         self.root.destroy()
         self.__init__()

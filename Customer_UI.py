@@ -5,6 +5,7 @@ from tkinter.scrolledtext import ScrolledText
 from tkinter import ttk
 import Menu_Management
 import order_management
+from Payment_option import trigger 
 
 Username = "User1"
 
@@ -18,7 +19,7 @@ class mine:
         self.root.configure(bg='black')
 
         #figure some way to know the row span of a device so it works nicely! 
-        self.row_length = 4
+        self.row_length = 2
 
         image_path=PhotoImage(master = self.root, file='images/open page 1 Large.png')
         bg_image=tk.Label(self.root, image=image_path)
@@ -537,7 +538,7 @@ class mine:
         self.bg_image=tk.Label(self.root, image=self.image_path)
         self.bg_image.pack()
 
-        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22), relief="flat", bg="white", fg="black")
+        self.button = tk.Button(self.root,text=f"pay {self.cost}", font = ("Courier New Bold", 22), relief="flat", bg="white", fg="black",command=self.Trigger)
         self.button.pack(pady=70)
 
         def on_enter(e):
@@ -555,6 +556,8 @@ class mine:
 
     def close_window(self):
         self.root.destroy()
+    def Trigger(self):
+        trigger(self.root)
 
 
 if __name__ == "__main__":

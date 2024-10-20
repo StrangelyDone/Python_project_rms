@@ -27,7 +27,7 @@ class mine:
         self.button1 = tk.Button(self.root , text="Menu", font=('Courier New Bold', 18), height=2, fg='black', command=self.menu, relief="flat", bg="white")
         self.button1.pack(padx=20, pady=20)
 
-        self.button2 = tk.Button(self.root , text="Order History", font=('Times New Roman Bold', 18), height=2, fg='black', command=exit, relief="flat", bg="white")
+        self.button2 = tk.Button(self.root , text="Order History", font=('Times New Roman Bold', 18), height=2, fg='black', command=self.view_orders, relief="flat", bg="white")
         self.button2.pack(padx=20, pady=20)
 
         def on_enter(e):
@@ -58,6 +58,77 @@ class mine:
         self.root.destroy()
         self.__init__()
 
+    def view_orders(self):
+        self.close_window()
+        self.root = tk.Tk()
+        self.root.title("Order Management")
+        self.root.configure(bg="black")
+        self.root.geometry("800x600")
+        
+        # Top Frame
+        self.top_frame = tk.Frame(self.root, bg='black')
+        self.top_frame.pack(fill='x', padx=10, pady=10)
+
+        self.title = tk.Label(self.top_frame, text="Orders", font=("Courier New Bold", 24), bg="black", fg="white")
+        self.title.pack(side='top', padx=10)
+
+        # Table Frame
+        self.table_frame = tk.Frame(self.root, bg="black")
+        self.table_frame.pack(fill="both", expand=True)
+
+        self.style = ttk.Style()
+        self.style.theme_use("default")
+
+        self.style.configure("Treeview", background="black", foreground="white", fieldbackground="black", rowheight=40)
+
+        self.style.configure("Treeview.Heading", background="black", foreground="white", font=("Courier New Bold", 12))
+        
+        self.tree = ttk.Treeview(self.table_frame, columns=("Customer", "Items", "Total"), show="headings")
+        self.tree.heading("Customer", text="Customer Name")
+        self.tree.heading("Items", text="Items")
+        self.tree.heading("Total", text="Total Cost")
+
+        self.tree.column("Customer", anchor="center", width=150)
+        self.tree.column("Items", anchor="center", width=280)
+        self.tree.column("Total", anchor="center", width=100)
+
+        self.tree.pack(fill="both", expand=True, padx = 10)
+
+        # Button Frame (for view and mark complete (no refresh here!))
+        self.button_frame = tk.Frame(self.root, bg="black")
+        self.button_frame.pack(fill="x", pady=10)
+
+        self.view_button = tk.Button(self.button_frame, text="View Details", font=("Arial", 14), bg="white", fg="black", command=self.view_details)
+        self.view_button.pack(side="right", padx=20)
+
+        self.back_button = tk.Button(self.button_frame, text="Back", font=("Arial", 14), bg="white", fg="black", command=self.go_back)
+        self.back_button.pack(side="left", padx=20)
+
+        self.load_data()
+
+    def load_data(self):
+    
+        cart = order_management.Cart_class()
+        orders = cart.order_reader_user(Username)
+        #print(orders)
+
+        for order in orders:
+            self.tree.insert("", "end", values=order)
+
+    def view_details(self):
+        selected_order = self.tree.selection()
+        if selected_order:
+            order_data = self.tree.item(selected_order, "values")
+            temp = tk.Tk()
+            temp.geometry("800x200")
+            temp.config(bg="black")
+
+            text_frame = tk.Frame(temp, bg = "black")
+            text_frame.pack(padx = 20, pady = 20)
+            orders_display = tk.Text(text_frame, font=('Arial', 18), bg='black', fg='white', height=15, width=60, bd=2, relief="ridge")
+            orders_display.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+            orders_display.insert(tk.END, f"Customer Name: {order_data[0]}\nItems: {order_data[1]}\nTotal cost: {order_data[2]}\n")
+
     def menu(self):
         self.close_window()
         self.root = tk.Tk()
@@ -71,11 +142,10 @@ class mine:
         self.main_frame = tk.Frame(self.root, bg='black')
         self.main_frame.pack(fill='both', expand=1)
 
-        # Create a canvas but without the scrollbar
         self.my_canvas = tk.Canvas(self.main_frame, bg='black')
         self.my_canvas.pack(side='left', fill='both', expand=1)
 
-        # Bind the canvas resize event but without scrollbar adjustments
+        # Bind the canvas resize event
         self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion=self.my_canvas.bbox("all")))
 
         # Create the second frame inside the canvas
@@ -162,7 +232,7 @@ class mine:
         self.second_frame = tk.Frame(self.my_canvas, bg='black')
         self.my_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
 
-        # Add checkbuttons inside the second frame in a grid layout with 3 images per row
+        # Add checkbuttons inside the second frame in a grid layout with "self.row_length" images per row (also some how configure it!)
         for i in range(len(starters)):
             var = tk.BooleanVar()
             self.starter_selection[f"{starters[i]}"] = var

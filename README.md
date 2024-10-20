@@ -1,6 +1,7 @@
 # Python_project_rms
 python group project - sem 1, team 40, 2024-25.
 <br>
+<br>
 Perla Brinda                       IMT2024013
 <br>
 Tamminani Sanjay Kumar             IMT2024056
@@ -9,12 +10,15 @@ Gutha Raj vardhan                  IMT2024003
 <br>
 Thumu Abhinav                      IMT2024007
 <br>
-Requirments
+<br>
+Requirments:
 <br>
     Tkinter
 <br>
-RUNNING
+<br>
+RUNNING:
 <br>
 Run the main.py file in the correct directory to start....
+<br>
 <br>
 GitHub:    https://github.com/StrangelyDone/Python_project_rms.git

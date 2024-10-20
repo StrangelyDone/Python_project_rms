@@ -20,5 +20,9 @@ RUNNING:
 <br>
 Run the main.py file in the correct directory to start....
 <br>
+to use the admin interface ,login with "admin" as username and "password" as password...
+<br>
+users can register and then be logged in...
+<br>
 <br>
 GitHub:    https://github.com/StrangelyDone/Python_project_rms.git

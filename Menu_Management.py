@@ -1,7 +1,7 @@
 import csv 
 
 class Menu_class :
-    def __init__(self,fn='Menu.csv'):
+    def __init__(self,fn='files/Menu.csv'):
         self.filename=fn
     def add(self,item,price,category):
         with open(self.filename,mode='a', newline='') as file:

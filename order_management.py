@@ -14,7 +14,7 @@ class Cart_class:
         for i in self.items:
             sum += i[1]
 
-        with open(f"{user_name}_orders.csv", "a", newline= '') as fp:
+        with open(f"files/{user_name}_orders.csv", "a", newline= '') as fp:
             csv_fp = writer(fp, delimiter=';')
             item = ''
             for i in self.items:
@@ -26,7 +26,7 @@ class Cart_class:
             csv_fp.writerow(data)
 
 
-        with open("orders_admin.csv", "a", newline= '', ) as fp:
+        with open("files/orders_admin.csv", "a", newline= '', ) as fp:
             csv_fp = writer(fp, delimiter=';')
     #same motivation in adding the header row again and again! 
             csv_fp.writerow(["user name", "items", "price", "status"])
@@ -43,7 +43,7 @@ class Cart_class:
     #format for each thing in orders(the nested list below): customer, items, total, status
     def order_reader(self):
         orders = []
-        with open("orders_admin.csv") as fp:
+        with open("files/orders_admin.csv") as fp:
             csv_fp = reader(fp, delimiter=';')
             for i in csv_fp:
                 if i == '':
@@ -54,18 +54,21 @@ class Cart_class:
 
     def order_reader_user(self, user_name):
         orders = []
-        with open(f"{user_name}_orders.csv") as fp:
-            csv_fp = reader(fp, delimiter=';')
-            for i in csv_fp:
-                if i == '':
-                    continue
-                if i[0] != "user name":
-                    orders.append(i)
-        return orders
+        try:
+            with open(f"files/{user_name}_orders.csv") as fp:
+                csv_fp = reader(fp, delimiter=';')
+                for i in csv_fp:
+                    if i == '':
+                        continue
+                    if i[0] != "user name":
+                        orders.append(i)
+            return orders
+        except FileNotFoundError:
+            return ["no currernt orders", "no currernt orders", "no currernt orders", "no currernt orders"]
     
     def mark_as_done(self, user_name, price):
         orders = []
-        with open("orders_admin.csv") as fp:
+        with open("files/orders_admin.csv") as fp:
             csv_fp_reader = reader(fp, delimiter=';')
             for i in csv_fp_reader:
                 if i == '':
@@ -76,7 +79,7 @@ class Cart_class:
                 else:
                     orders.append(i)
 
-        with open("orders_admin.csv", 'w', newline = '') as fp:
+        with open("files/orders_admin.csv", 'w', newline = '') as fp:
             csv_fp_writer = writer(fp, delimiter=';')
             csv_fp_writer.writerows(orders)
 

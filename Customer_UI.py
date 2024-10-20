@@ -19,7 +19,7 @@ class mine:
         self.root.configure(bg='black')
 
         #figure some way to know the row span of a device so it works nicely! 
-        self.row_length = 2
+        self.row_length = 4
 
         image_path=PhotoImage(master = self.root, file='images/open page 1 Large.png')
         bg_image=tk.Label(self.root, image=image_path)
@@ -95,15 +95,37 @@ class mine:
 
         self.tree.pack(fill="both", expand=True, padx = 10)
 
-        # Button Frame (for view and mark complete (no refresh here!))
+        # Button Frame (for view and back/quit (no refresh here!))
         self.button_frame = tk.Frame(self.root, bg="black")
         self.button_frame.pack(fill="x", pady=10)
 
-        self.view_button = tk.Button(self.button_frame, text="View Details", font=("Arial", 14), bg="white", fg="black", command=self.view_details)
+        self.view_button = tk.Button(self.button_frame, text="View Details", font=("Arial", 14), bg="white", fg="black", command=self.view_details, relief = "flat")
         self.view_button.pack(side="right", padx=20)
 
-        self.back_button = tk.Button(self.button_frame, text="Back", font=("Arial", 14), bg="white", fg="black", command=self.go_back)
+        def on_enter(e):
+            self.view_button['bg'] = "#333"
+            self.view_button['fg'] = "white"
+
+        def on_leave(e):
+            self.view_button['bg'] = "white"
+            self.view_button['fg'] = "black"
+
+        self.view_button.bind("<Enter>", on_enter)
+        self.view_button.bind("<Leave>", on_leave)
+
+        self.back_button = tk.Button(self.button_frame, text="Quit", font=("Arial", 14), bg="white", fg="black", command=quit, relief = "flat")
         self.back_button.pack(side="left", padx=20)
+
+        def on_enter(e):
+            self.back_button['bg'] = "#333"
+            self.back_button['fg'] = "white"
+
+        def on_leave(e):
+            self.back_button['bg'] = "white"
+            self.back_button['fg'] = "black"
+
+        self.back_button.bind("<Enter>", on_enter)
+        self.back_button.bind("<Leave>", on_leave)
 
         self.load_data()
 
@@ -126,7 +148,7 @@ class mine:
 
             text_frame = tk.Frame(temp, bg = "black")
             text_frame.pack(padx = 20, pady = 20)
-            orders_display = tk.Text(text_frame, font=('Arial', 18), bg='black', fg='white', height=15, width=60, bd=2, relief="ridge")
+            orders_display = tk.Text(text_frame, font=('Courier New Bold', 18), bg='black', fg='white', height=15, width=60, bd=2, relief="ridge")
             orders_display.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
             orders_display.insert(tk.END, f"Customer Name: {order_data[0]}\nItems: {order_data[1]}\nTotal cost: {order_data[2]}\n")
 
@@ -171,7 +193,7 @@ class mine:
         self.button_desserts.grid(row=1, column=1, pady = 10)
         self.button_desserts.image = self.image_3
 
-        self.back = tk.Button(self.second_frame, text="back", font=('Arial', 18), command = self.go_back, relief="flat", bg="white", fg="black",)
+        self.back = tk.Button(self.second_frame, text="back", font=('Arial', 18), command = self.go_back, relief="flat", bg="white", fg="black")
         self.back.grid(row=2, column=0, pady=10, columnspan=3, sticky= 'sw', padx = 40)
 
         def on_enter(e):
@@ -556,6 +578,7 @@ class mine:
 
     def close_window(self):
         self.root.destroy()
+        
     def Trigger(self):
         trigger(self.root)
 

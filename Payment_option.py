@@ -48,6 +48,7 @@ def process_payment():
 
     # If everything is valid
     messagebox.showinfo("Success", f"{payment_method} payment processed successfully!")
+    main_window_root.destroy()
     root.destroy()  # Close the payment window
 
 def validate_card_number(card_number):
@@ -69,7 +70,7 @@ def cancel_payment():
 # Set up the main application window
 def trigger(a):
     
-    global root ,main_window_root
+    global root ,main_window_root, upi_id_entry
     main_window_root = a
     root=tk.Tk()
     root.title("Payment Interface")
@@ -86,8 +87,8 @@ def trigger(a):
     payment_method_var = StringVar(root)
     payment_method_var.set("Select Payment Method")  # Default option
 
-    payment_methods = ["Select Payment Method", "Card Payment", "UPI", "Cash on Delivery"]
-    payment_method_label = tk.Label(root, text="Payment Method:", font=('Arial', 16), bg='black', fg='white')
+    payment_methods = ["Card Payment", "UPI", "Cash on Delivery"]
+    payment_method_label = tk.Label(root, text="Payment Method:", font=('Arial', 16), bg='black', fg='white', relief = "flat")
     payment_method_label.pack(pady=5)
 
     payment_method_menu = tk.OptionMenu(root, payment_method_var, *payment_methods)
@@ -143,12 +144,41 @@ def trigger(a):
     payment_method_var.trace("w", toggle_fields)
 
     # Payment Button
-    pay_button = tk.Button(root, text="Pay Now", font=('Arial', 18), command=process_payment)
+    pay_button = tk.Button(root, text="Pay Now", font=('Arial', 18), command=process_payment, relief="flat", bg="white", fg="black")
     pay_button.pack(pady=20)
 
+    def on_enter(e):
+        pay_button['bg'] = "#333"
+        pay_button['fg'] = "white"
+
+    def on_leave(e):
+        pay_button['bg'] = "white"
+        pay_button['fg'] = "black"
+
+    pay_button.bind("<Enter>", on_enter)
+    pay_button.bind("<Leave>", on_leave)
+
     # Cancel Button
-    cancel_button = tk.Button(root, text="Cancel", font=('Arial', 18), command=cancel_payment)
+    cancel_button = tk.Button(root, text="Cancel", font=('Arial', 18), command=cancel_payment, relief="flat", bg="white", fg="black")
     cancel_button.pack(pady=5)
+
+    def on_enter(e):
+        cancel_button['bg'] = "#333"
+        cancel_button['fg'] = "white"
+
+    def on_leave(e):
+        cancel_button['bg'] = "white"
+        cancel_button['fg'] = "black"
+
+    cancel_button.bind("<Enter>", on_enter)
+    cancel_button.bind("<Leave>", on_leave)
 
     # Start the Tkinter event loop
     root.mainloop()
+
+
+if __name__ == "__main__":
+    rt = tk.Tk()
+    trigger(rt)
+
+    

@@ -197,6 +197,7 @@ class admin_UI:
             if item_name != '':
                 menu.add(item_name, item_price, item_type)
                 messagebox.showinfo("Success", "Item added to menu successfully!")
+                self.add_item_pop_up.destroy()
             else:
                 messagebox.showerror("Error", "Enter item name")
 
@@ -249,8 +250,10 @@ class admin_UI:
             if item_name in items:
                 menu.remove(item_name)
                 messagebox.showinfo("Success", "Item removed from menu")
+                self.remove_item_pop_up.destroy()
             else:
                 messagebox.showerror("Error", "Item not in menu!")
+                
         # Remove item button
         self.confirm_remove_button = tk.Button(self.remove_frame, text="Remove Item", font=('Arial', 18), command=remove_menu_item, relief = 'flat')
         self.confirm_remove_button.grid(row=2, column=0, columnspan=2, pady=10)
@@ -316,15 +319,48 @@ class admin_UI:
         self.button_frame = tk.Frame(self.root, bg="black")
         self.button_frame.pack(fill="x", pady=10)
 
-        self.view_button = tk.Button(self.button_frame, text="View Details", font=("Arial", 14), bg="white", fg="black", command=self.view_details)
+        self.view_button = tk.Button(self.button_frame, text="View Details", font=("Arial", 14), bg="white", fg="black", command=self.view_details, relief = "flat")
         self.view_button.pack(side="left", padx=20)
 
-        self.mark_button = tk.Button(self.button_frame, text="Mark as Completed", font=("Arial", 14), bg="white", fg="black", command=self.mark_completed)
+        def on_enter(e):
+            self.view_button['bg'] = "#333"
+            self.view_button['fg'] = "white"
+
+        def on_leave(e):
+            self.view_button['bg'] = "white"
+            self.view_button['fg'] = "black"
+
+        self.view_button.bind("<Enter>", on_enter)
+        self.view_button.bind("<Leave>", on_leave)
+
+        self.mark_button = tk.Button(self.button_frame, text="Mark as Completed", font=("Arial", 14), bg="white", fg="black", command=self.mark_completed, relief = "flat")
         self.mark_button.pack(side="right", padx=20)
 
+        def on_enter(e):
+            self.mark_button['bg'] = "#333"
+            self.mark_button['fg'] = "white"
+
+        def on_leave(e):
+            self.mark_button['bg'] = "white"
+            self.mark_button['fg'] = "black"
+
+        self.mark_button.bind("<Enter>", on_enter)
+        self.mark_button.bind("<Leave>", on_leave)
+
         #a refresh button
-        self.refresh_button = tk.Button(self.button_frame, text="Refresh", font=("Arial", 14), bg="white", fg="black", command=self.refresh)
+        self.refresh_button = tk.Button(self.button_frame, text="Refresh", font=("Arial", 14), bg="white", fg="black", command=self.refresh, relief = "flat")
         self.refresh_button.pack(side="bottom", padx=20)
+
+        def on_enter(e):
+            self.refresh_button['bg'] = "#333"
+            self.refresh_button['fg'] = "white"
+
+        def on_leave(e):
+            self.refresh_button['bg'] = "white"
+            self.refresh_button['fg'] = "black"
+
+        self.refresh_button.bind("<Enter>", on_enter)
+        self.refresh_button.bind("<Leave>", on_leave)
 
         self.load_data()
 
@@ -365,4 +401,5 @@ class admin_UI:
     def close_window(self):
         self.root.destroy()
 
-admin_UI()
+if __name__ == "__main__":
+    admin_UI()

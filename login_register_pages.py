@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 
 type_of_login = None
+user_name = None
 
 class login_register_class:
     def __init__(self):
@@ -75,11 +76,13 @@ class login_register_class:
         self.root.mainloop()
 
     def clicked(self):
+        global user_name
         u_name = str(self.username.get())
         p_word = str(self.password.get())
 
         boolean = self.verify(u_name, p_word)
         if boolean:
+            user_name = u_name
             self.root.destroy()
         else:
             messagebox.showerror("Error occurred", "Invalid username / password!")
@@ -97,7 +100,7 @@ class login_register_class:
     def verify(self, name, pword):
         global type_of_login
         try:
-            with open("login_credentials.csv") as fp:
+            with open("files/login_credentials.csv") as fp:
                 data = reader(fp)
                 for i in data:
                     if i == '':
@@ -180,7 +183,7 @@ class register_page_class:
         p_word = str(self.password.get())
 
         try:
-            with open("login_credentials.csv", "a", newline = '') as fp:
+            with open("files/login_credentials.csv", "a", newline = '') as fp:
                 csv_fp = writer(fp)
                 data = [u_name, p_word, "customer"]
                 csv_fp.writerow(data)
@@ -209,6 +212,6 @@ if __name__ == "__main__":
     try:
         print("Login Type:", type_of_login)
     except Exception as e:
-        print("bruh don't close the window before logging in")
+        print("don't close the window before logging in....")
         print(e)
     

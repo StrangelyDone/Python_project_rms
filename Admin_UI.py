@@ -24,7 +24,7 @@ class admin_UI:
         self.button.pack(padx=20, pady=20)
 
         # Back to Login button
-        self.back_to_login_button = tk.Button(self.root, text="Quit", font=('Times New Roman Bold', 18), height=2, fg='black', bg="white", relief="flat", command=self.root.quit)
+        self.back_to_login_button = tk.Button(self.root, text="Quit", font=('Times New Roman Bold', 18), height=2, fg='black', bg="white", relief="flat", command=quit)
         self.back_to_login_button.pack(padx=20, pady=20)
 
         # Button hover effects
@@ -214,7 +214,7 @@ class admin_UI:
             menu = Menu_Management.Menu_class()
             if item_name != '':
                 imageUploader(item_name)
-                if not error:
+                if error:
                     messagebox.showerror("Error", "Please add an image")
                     return
                 menu.add(item_name, item_price, item_type)
@@ -226,12 +226,12 @@ class admin_UI:
         def imageUploader(item):
             global error
             file_types = [("PNG files", "*.png")]
-            messagebox.showinfo("Information", "Please select the appropriate image from this project's image directory")
+            messagebox.showinfo("Information", "Please select the appropriate image from this project's 'sample_images' directory")
 
             image_path = filedialog.askopenfilename(filetypes=file_types)
 
             if image_path:
-                messagebox.showinfo("Information", "Please select the images folder in this project's directory")
+                messagebox.showinfo("Information", "Please select the 'images' folder as the destinaiton in this project's directory")
 
                 save_directory = filedialog.askdirectory()
 
@@ -243,14 +243,17 @@ class admin_UI:
                     save_path = os.path.join(save_directory, image_filename)
 
                     # Copy the image to the selected directory
-                    shutil.copy(image_path, save_path)
+                    try:
+                        shutil.copy(image_path, save_path)
+                    except shutil.SameFileError:
+                        pass
                     error = False
                 else:
                     messagebox.showerror("Error", "No save directory chosen")
                     error = True
             else:
                 messagebox.showerror("Error", "No image selected")
-                self.error = True
+                error = True
 
         # Add item button
         self.confirm_add_button = tk.Button(self.add_frame, text="Add Item", font=('Arial', 18), command=add_menu_item, relief = 'flat')

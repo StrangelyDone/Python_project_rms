@@ -24,7 +24,7 @@ class admin_UI:
         self.button.pack(padx=20, pady=20)
 
         # Back to Login button
-        self.back_to_login_button = tk.Button(self.root, text="Back to Login", font=('Times New Roman Bold', 18), height=2, fg='black', bg="white", relief="flat", command=self.root.quit)
+        self.back_to_login_button = tk.Button(self.root, text="Quit", font=('Times New Roman Bold', 18), height=2, fg='black', bg="white", relief="flat", command=self.root.quit)
         self.back_to_login_button.pack(padx=20, pady=20)
 
         # Button hover effects
